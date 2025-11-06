@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct Tasbee7App: App {
+    @State private var favorites = FavoritesStore()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(favorites)
         }
     }
 }
