@@ -39,7 +39,7 @@ struct AthkarDetailView: View {
                                 }
                             } label: {
                                 Image(systemName: "ellipsis")
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle((ThemeColor(rawValue: themeColorRaw) ?? .أزرق).color)
                                     .padding(8)
                             }
                         }
@@ -68,8 +68,7 @@ struct AthkarDetailView: View {
                     }
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 20)
+            .padding()
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)

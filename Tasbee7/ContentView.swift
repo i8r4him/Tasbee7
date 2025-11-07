@@ -12,9 +12,14 @@ enum Tabs {
 }
 
 struct ContentView: View {
+    @AppStorage(AppTheme.storageKey) private var themeColorRaw: String = ThemeColor.أزرق.rawValue
     
     @State private var selectedTab: Tabs = .home
     @State private var search: String = "ابحث هنا"
+    
+    private var themeColor: Color {
+        (ThemeColor(rawValue: themeColorRaw) ?? .أزرق).color
+    }
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -30,6 +35,7 @@ struct ContentView: View {
                 SearchView()
             }
         }
+        .tint(themeColor)
         .tabBarMinimizeBehavior(.onScrollDown)
         .searchable(text: $search, placement: .navigationBarDrawer, prompt: "ابحث هنا")
     }

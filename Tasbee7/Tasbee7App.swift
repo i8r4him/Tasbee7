@@ -11,10 +11,22 @@ import SwiftUI
 struct Tasbee7App: App {
     @State private var favorites = FavoritesStore()
 
+    init() {
+        // Request notification authorization on app launch
+        Task { @MainActor in
+            await NotificationManager.shared.requestAuthorization()
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(favorites)
+                .onAppear {
+                    // Request location permission and start updates
+                    LocationManager.shared.requestPermission()
+                    LocationManager.shared.startLocationUpdates()
+                }
         }
     }
 }

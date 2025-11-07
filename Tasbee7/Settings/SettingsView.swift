@@ -8,25 +8,24 @@
 import SwiftUI
 
 struct SettingsView: View {
-
+    @Environment(\.dismiss) private var dismiss
+    
     @AppStorage(AppTheme.storageKey) private var themeColorRaw: String = ThemeColor.أزرق.rawValue
     
     private let shareURL = URL(string: "https://tasbee7.app")!
     
-    // Add this computed property to get the app version
     private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "غير معروف"
     }
     
-    // If you also want to show the build number
     private var buildNumber: String {
-        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "غير معروف"
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("User Preferences") {
+                Section("التفضيلات") {
                     let selection = Binding<ThemeColor>(
                         get: { ThemeColor(rawValue: themeColorRaw) ?? .أزرق },
                         set: { newValue in
@@ -62,16 +61,16 @@ struct SettingsView: View {
                 Section {
                     VStack(spacing: 8) {
                         HStack(spacing: 4) {
-                            Text("Made with")
+                            Text("صُنع بـ")
                             Image(systemName: "heart.fill")
                                 .foregroundStyle(.red)
-                            Text("by Ibrahim")
+                            Text("إبراهيم")
                         }
                         .font(.footnote)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.secondary)
                         
-                        Text("Version \(appVersion) (\(buildNumber))")
+                        Text("الإصدار \(appVersion) (\(buildNumber))")
                             .font(.footnote)
                             .foregroundColor(.secondary)
                         
@@ -85,6 +84,16 @@ struct SettingsView: View {
             }
             .navigationTitle("الإعدادات")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(role: .confirm) {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
         }
     }
 }

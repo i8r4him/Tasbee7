@@ -14,8 +14,6 @@
 		833AE2452EBD48F0008709AD /* Exceptions for "Tasbee7" folder in "Tasbee7" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Data/README.md,
-				Fonts/README.md,
 				Info.plist,
 			);
 			target = 83569A582EBCDEF00040B817 /* Tasbee7 */;
