@@ -25,6 +25,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                // 1. Preferences
                 Section("التفضيلات") {
                     let selection = Binding<ThemeColor>(
                         get: { ThemeColor(rawValue: themeColorRaw) ?? .أزرق },
@@ -57,31 +58,77 @@ struct SettingsView: View {
                         Label("الإشعارات", systemImage: "bell.badge.fill")
                     }
                 }
-
-                Section {
-                    VStack(spacing: 8) {
-                        HStack(spacing: 4) {
-                            Text("صُنع بـ")
-                            Image(systemName: "heart.fill")
-                                .foregroundStyle(.red)
-                            Text("إبراهيم")
-                        }
-                        .font(.footnote)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.secondary)
-                        
-                        Text("الإصدار \(appVersion) (\(buildNumber))")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                        
-                        Link("@i8r4him", destination: URL(string: "https://instagram.com/i8r4him")!)
-                            .font(.footnote)
-                            .foregroundColor(.accentColor)
+                
+                // 2. About the App
+                Section("عن التطبيق") {
+                    NavigationLink { WhatsNewView() } label: {
+                        Label("ما الجديد", systemImage: "text.badge.plus")
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    
+                    NavigationLink { AboutView() } label: {
+                        Label("عن التطبيق", systemImage: "info.circle.fill")
+                    }
+                    
+                    NavigationLink { PrivacyPolicyView() } label: {
+                        Label("سياسة الخصوصية", systemImage: "lock.fill")
+                    }
+                }
+                
+                // 3. Support - Help and feedback
+                Section("الدعم") {
+                    NavigationLink { HelpFeedbackView() } label: {
+                        Label("مساعدة", systemImage: "questionmark.bubble.fill")
+                    }
+                    
+                    NavigationLink { FeatureRequestView() } label: {
+                        Label("طلب ميزات", systemImage: "exclamationmark.bubble.fill")
+                    }
+                }
+                
+                // 4. Share - Social actions
+                Section("المشاركة") {
+                    ShareLink(item: shareURL) {
+                        Label("نشر تسبيح", systemImage: "square.and.arrow.up.fill")
+                    }
+                }
+                
+                // 5. Developer - Credits and follow
+                Section("المطور") {
+                    Link(destination: URL(string: "https://x.com/i8r4him")!) {
+                        HStack {
+                            Image(systemName: "bird.fill")
+                            Text("تابع المطور على X")
+                            Spacer()
+                            Image(systemName: "arrow.up.forward")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                
+                // 6. Version info
+                Section {
+                    VStack(spacing: 5) {
+                        VStack(spacing: 6) {
+                            Text("صدقة جارية عن فاعلا خير")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        HStack(spacing: 4) {
+                            Text("الإصدار")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text(" \(appVersion) (\(buildNumber))")
+                                .font(.subheadline)
+                                .foregroundStyle(.primary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
                     .listRowBackground(Color.clear)
                 }
             }
+            .symbolRenderingMode(.hierarchical)
             .navigationTitle("الإعدادات")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

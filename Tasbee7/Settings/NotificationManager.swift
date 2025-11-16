@@ -55,6 +55,7 @@ class NotificationManager {
         content.body = "حان وقت أذكار الصباح 🌅"
         content.sound = .default
         content.badge = 1
+        content.userInfo = ["notificationType": "morningAthkar"]
         
         let components = Calendar.current.dateComponents([.hour, .minute], from: reminderTime)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
@@ -93,6 +94,7 @@ class NotificationManager {
         content.body = "حان وقت أذكار المساء 🌆"
         content.sound = .default
         content.badge = 1
+        content.userInfo = ["notificationType": "eveningAthkar"]
         
         let components = Calendar.current.dateComponents([.hour, .minute], from: reminderTime)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
@@ -121,6 +123,48 @@ class NotificationManager {
         
         let times = SunriseSunsetCalculator.calculateSunriseSunset(for: location)
         return (times?.sunrise, times?.sunset)
+    }
+    
+    // Clear app badge
+    func clearBadge() {
+        center.setBadgeCount(0)
+    }
+    
+    // Test notification - fires in 5 seconds
+    func sendTestNotification(type: NotificationType) async {
+        let content = UNMutableNotificationContent()
+        let identifier: String
+        
+        switch type {
+        case .morning:
+            content.title = "أذكار الصباح"
+            content.body = "حان وقت أذكار الصباح 🌅 (اختبار)"
+            content.userInfo = ["notificationType": "morningAthkar"]
+            identifier = "test_morning"
+        case .evening:
+            content.title = "أذكار المساء"
+            content.body = "حان وقت أذكار المساء 🌆 (اختبار)"
+            content.userInfo = ["notificationType": "eveningAthkar"]
+            identifier = "test_evening"
+        }
+        
+        content.sound = .default
+        content.badge = 1
+        
+        // Schedule for 5 seconds from now
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let request = UNNotificationRequest(identifier: "\(identifier)_\(UUID().uuidString)", content: content, trigger: trigger)
+        
+        do {
+            try await center.add(request)
+        } catch {
+            print("Error sending test notification: \(error.localizedDescription)")
+        }
+    }
+    
+    enum NotificationType {
+        case morning
+        case evening
     }
 }
 

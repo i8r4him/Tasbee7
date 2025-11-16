@@ -155,6 +155,46 @@ struct NotificationsSettingsView: View {
             } footer: {
                 Text("سيتم إرسال التذكير بعد 15 دقيقة من شروق/غروب الشمس")
             }
+            
+            #if DEBUG
+            Section {
+                Button {
+                    Task {
+                        await notificationManager.sendTestNotification(type: .morning)
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "bell.badge")
+                        Text("اختبار إشعار الصباح")
+                        Spacer()
+                        Text("5 ثواني")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .foregroundStyle(themeColor)
+                
+                Button {
+                    Task {
+                        await notificationManager.sendTestNotification(type: .evening)
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "bell.badge")
+                        Text("اختبار إشعار المساء")
+                        Spacer()
+                        Text("5 ثواني")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .foregroundStyle(themeColor)
+            } header: {
+                Text("اختبار الإشعارات")
+            } footer: {
+                Text("اضغط لاختبار الإشعار - سيصل بعد 5 ثواني")
+            }
+            #endif
         }
         .navigationTitle("الإشعارات")
         .navigationBarTitleDisplayMode(.inline)

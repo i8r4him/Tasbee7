@@ -7,6 +7,26 @@
 
 import SwiftUI
 
+enum FontSize: String, CaseIterable, Identifiable {
+    case small = "صغير"
+    case medium = "متوسط"
+    case large = "كبير"
+    case extraLarge = "كبير جداً"
+    
+    var id: String { rawValue }
+    
+    var size: CGFloat {
+        switch self {
+        case .small: return 16
+        case .medium: return 18
+        case .large: return 20
+        case .extraLarge: return 24
+        }
+    }
+    
+    var displayName: String { rawValue }
+}
+
 struct AthkarDetailView: View {
     let title: String
     let textItems: [String]
@@ -14,9 +34,53 @@ struct AthkarDetailView: View {
     @Environment(FavoritesStore.self) private var favorites
     @AppStorage(AppTheme.storageKey) private var themeColorRaw: String = ThemeColor.أزرق.rawValue
     @AppStorage(AppTheme.fontStorageKey) private var fontRaw: String = AthkarFont.system.rawValue
+    @AppStorage("athkarFontSize") private var fontSizeRaw: String = FontSize.medium.rawValue
     
     private var selectedFont: AthkarFont {
         AthkarFont(rawValue: fontRaw) ?? .system
+    }
+    
+    private var selectedFontSize: FontSize {
+        FontSize(rawValue: fontSizeRaw) ?? .medium
+    }
+    
+    private var themeColor: Color {
+        (ThemeColor(rawValue: themeColorRaw) ?? .أزرق).color
+    }
+    
+    private var customFontWithSize: Font {
+        switch selectedFont {
+        case .system:
+            return .system(size: selectedFontSize.size, design: .default)
+        case .scheherazade:
+            // Try to get the custom font with the selected size
+            let possibleNames = [
+                "ScheherazadeNew-Regular",
+                "ScheherazadeNew",
+                "Scheherazade New",
+                "ScheherazadeNewRegular"
+            ]
+            
+            for fontName in possibleNames {
+                if let uiFont = UIFont(name: fontName, size: selectedFontSize.size) {
+                    return Font(uiFont)
+                }
+            }
+            
+            // If font not found, try by family name
+            let familyNames = ["Scheherazade New", "ScheherazadeNew", "Scheherazade"]
+            for familyName in familyNames {
+                let familyFonts = UIFont.fontNames(forFamilyName: familyName)
+                if !familyFonts.isEmpty, let firstFont = familyFonts.first {
+                    if let uiFont = UIFont(name: firstFont, size: selectedFontSize.size) {
+                        return Font(uiFont)
+                    }
+                }
+            }
+            
+            // Fallback to system serif with selected size
+            return .system(size: selectedFontSize.size, design: .serif)
+        }
     }
 
     var body: some View {
@@ -49,7 +113,7 @@ struct AthkarDetailView: View {
                         VStack(alignment: .leading, spacing: 0) {
                             // Text content
                             Text(textItems[index])
-                                .font(selectedFont.font)
+                                .font(customFontWithSize)
                                 .padding()
                                 .lineSpacing(10)
                                 .multilineTextAlignment(.leading)
@@ -79,23 +143,40 @@ struct AthkarDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    ForEach(AthkarFont.allCases) { font in
-                        Button {
-                            fontRaw = font.rawValue
-                            AthkarFont.setSelectedFont(font)
-                        } label: {
-                            HStack {
-                                Text(font.displayName)
-                                if selectedFont.id == font.id {
-                                    Image(systemName: "checkmark")
+                    Section("حجم الخط") {
+                        ForEach(FontSize.allCases) { size in
+                            Button {
+                                fontSizeRaw = size.rawValue
+                            } label: {
+                                HStack {
+                                    Text(size.displayName)
+                                    if selectedFontSize.id == size.id {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    Section("نوع الخط") {
+                        ForEach(AthkarFont.allCases) { font in
+                            Button {
+                                fontRaw = font.rawValue
+                                AthkarFont.setSelectedFont(font)
+                            } label: {
+                                HStack {
+                                    Text(font.displayName)
+                                    if selectedFont.id == font.id {
+                                        Image(systemName: "checkmark")
+                                    }
                                 }
                             }
                         }
                     }
                 } label: {
-                    Image(systemName: "textformat")
+                    Image(systemName: "textformat.size")
                 }
-                .accessibilityLabel(Text("خط النص"))
+                .accessibilityLabel(Text("إعدادات الخط"))
             }
             
             ToolbarItem(placement: .topBarTrailing) {

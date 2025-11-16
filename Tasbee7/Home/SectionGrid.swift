@@ -32,7 +32,6 @@ struct SectionGrid<Item: Identifiable, Content: View>: View {
             LazyVGrid(columns: columns, alignment: .leading, spacing: 12, pinnedViews: []) {
                 ForEach(items) { item in
                     content(item)
-                        .id(item.id)
                 }
             }
         }

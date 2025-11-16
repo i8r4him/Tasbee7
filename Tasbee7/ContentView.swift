@@ -38,6 +38,9 @@ struct ContentView: View {
         .tint(themeColor)
         .tabBarMinimizeBehavior(.onScrollDown)
         .searchable(text: $search, placement: .navigationBarDrawer, prompt: "ابحث هنا")
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NotificationTapped"))) { notification in
+            selectedTab = .home
+        }
     }
 }
 

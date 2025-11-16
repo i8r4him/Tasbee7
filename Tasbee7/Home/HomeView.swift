@@ -166,6 +166,7 @@ struct HomeView: View {
     private func navigationLink(for item: AthkarSection) -> some View {
         NavigationLink(value: item) {
             AthkarCard(title: item.title)
+                .equatable()
         }
         .buttonStyle(.plain)
     }
