@@ -241,3 +241,4 @@ struct NotificationsSettingsView: View {
         NotificationsSettingsView()
     }
 }
+

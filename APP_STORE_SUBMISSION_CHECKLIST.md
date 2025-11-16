@@ -8,43 +8,8 @@
 **Category:** Education  
 **Deployment Target:** iOS 26.0
 
----
-
-## ✅ What You Already Have
-
-- [x] **Bundle Identifier** - Set to `i8r4him.Tasbee7`
-- [x] **Version & Build Numbers** - Set in project (1.0 / 1)
-- [x] **Location Permission** - `NSLocationWhenInUseUsageDescription` in Info.plist
-- [x] **Font Registration** - Scheherazade font registered
-- [x] **App Category** - Set to Education
-- [x] **Development Team** - DMKPB2487F
-- [x] **Code Signing** - Automatic signing enabled
-- [x] **All Core Features** - Home, Search, Sebha, Settings, Notifications
-
----
 
 ## 🔴 CRITICAL - Must Complete Before Submission
-
-### 1. App Icon (REQUIRED) ⚠️
-**Status:** ❌ **MISSING - Cannot submit without this**
-
-**What to do:**
-1. Create a **1024x1024 PNG** image
-   - Design tools: Figma, Canva, Photoshop, or AI (Midjourney/DALL-E)
-   - Keep it simple, recognizable at small sizes
-   - No transparency, solid background
-   - Design ideas: Tasbih beads, prayer beads, minimal Arabic calligraphy
-
-2. Add to Xcode:
-   - Open `Assets.xcassets` → `AppIcon`
-   - Drag your 1024x1024 image to the **Universal iOS** slot
-   - Build and test on device/simulator to verify it displays
-
-**Resources:**
-- [Apple's App Icon Guidelines](https://developer.apple.com/design/human-interface-guidelines/app-icons)
-- Free design: Canva, Figma (free tier)
-
----
 
 ### 2. Privacy Policy (REQUIRED) ⚠️
 **Status:** ❌ **MISSING - Required for location-based apps**
@@ -86,18 +51,6 @@ Check these views and complete them:
 - [ ] `WhatsNewView.swift` - Needs "What's New" content
 
 **Action:** Either implement these views or remove them from Settings if not ready.
-
----
-
-### 4. Update Share URL ⚠️
-**Status:** ⚠️ **Currently points to placeholder**
-
-In `SettingsView.swift`:
-```swift
-private let shareURL = URL(string: "https://tasbee7.app")!
-```
-
-**Action:** Update to your actual App Store URL after submission, or remove share button if not ready.
 
 ---
 
@@ -295,40 +248,3 @@ private let shareURL = URL(string: "https://tasbee7.app")!
 ### Step 4: Submit
 10. **Archive and upload** build
 11. **Submit for review**
-
----
-
-## 🔗 Resources
-
-- [App Store Connect](https://appstoreconnect.apple.com)
-- [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
-- [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
-- [App Icon Design Guidelines](https://developer.apple.com/design/human-interface-guidelines/app-icons)
-
----
-
-## ⚠️ Common Rejection Reasons
-
-1. **Missing app icon** - Will be rejected immediately
-2. **Missing privacy policy** - Required for location apps
-3. **Placeholder content** - "Hello, World!" views will be rejected
-4. **Broken functionality** - Test thoroughly
-5. **Misleading information** - Ensure descriptions match functionality
-6. **Incomplete metadata** - Fill all required fields
-
----
-
-## 📝 Notes
-
-- **Bundle ID:** `i8r4him.Tasbee7` - Make sure this matches exactly in App Store Connect
-- **Version:** Start with 1.0, increment for updates
-- **Build:** Start with 1, increment for each submission
-- **Category:** Currently set to Education, consider Lifestyle/Reference
-- **Deployment Target:** iOS 26.0 - Very high, consider lowering to iOS 17.0+ for broader reach
-
----
-
-**Current Status:** ⚠️ **Not Ready** - Missing app icon, privacy policy, and some views need completion
-
-**Priority:** Focus on Critical items first, then Important items, then Nice-to-have
-
