@@ -65,6 +65,10 @@ struct SettingsView: View {
                         Label("ما الجديد", systemImage: "text.badge.plus")
                     }
                     
+                    NavigationLink { OnboardingView() } label: {
+                        Label("جولة تعريفية", systemImage: "hand.wave.fill")
+                    }
+                    
                     NavigationLink { AboutView() } label: {
                         Label("عن التطبيق", systemImage: "info.circle.fill")
                     }

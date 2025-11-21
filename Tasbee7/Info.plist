@@ -4,6 +4,8 @@
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to accurately calculate sunrise and sunset times to send morning and evening athkar reminders</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>نحتاج إلى إذن الإشعارات لإرسال تذكيرات أذكار الصباح والمساء في الأوقات المناسبة</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ScheherazadeNew-Regular.ttf</string>

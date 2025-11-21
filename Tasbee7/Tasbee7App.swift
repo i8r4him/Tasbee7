@@ -11,6 +11,8 @@ import UIKit
 @main
 struct Tasbee7App: App {
     @State private var favorites = FavoritesStore()
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var showOnboarding = false
 
     init() {
         // Set notification delegate
@@ -27,6 +29,11 @@ struct Tasbee7App: App {
             ContentView()
                 .environment(favorites)
                 .onAppear {
+                    // Show onboarding on first launch
+                    if !hasCompletedOnboarding {
+                        showOnboarding = true
+                    }
+                    
                     // Clear badge when app opens
                     NotificationManager.shared.clearBadge()
                     
@@ -37,6 +44,9 @@ struct Tasbee7App: App {
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                     // Clear badge when app comes to foreground
                     NotificationManager.shared.clearBadge()
+                }
+                .sheet(isPresented: $showOnboarding) {
+                    OnboardingView()
                 }
         }
     }
