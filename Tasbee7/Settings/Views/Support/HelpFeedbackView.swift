@@ -16,25 +16,27 @@ struct HelpFeedbackView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(spacing: 32) {
                 // Header
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(spacing: 8) {
                     Text("المساعدة والدعم")
                         .font(.largeTitle.bold())
                     
                     Text("نحن هنا لمساعدتك! ابحث عن إجابات أو تواصل معنا")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
-                .padding(.bottom, 8)
+                .padding(.top, 20)
                 
                 Divider()
                 
                 // Help Sections
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(spacing: 20) {
                     HelpSection(
                         title: "كيفية الاستخدام",
                         icon: "book.fill",
+                        themeColor: themeColor,
                         items: [
                             "تصفح الأذكار من الصفحة الرئيسية",
                             "استخدم البحث للعثور على أذكار محددة",
@@ -47,6 +49,7 @@ struct HelpFeedbackView: View {
                     HelpSection(
                         title: "الإشعارات",
                         icon: "bell.fill",
+                        themeColor: themeColor,
                         items: [
                             "اذهب إلى الإعدادات → الإشعارات",
                             "فعّل تذكير الصباح أو المساء",
@@ -58,6 +61,7 @@ struct HelpFeedbackView: View {
                     HelpSection(
                         title: "المفضلة",
                         icon: "star.fill",
+                        themeColor: themeColor,
                         items: [
                             "اضغط على أيقونة النجم في أي ذكر",
                             "ستظهر في قسم المفضلة في الصفحة الرئيسية",
@@ -82,7 +86,7 @@ struct HelpFeedbackView: View {
                             HStack {
                                 Image(systemName: "bird.fill")
                                     .foregroundStyle(themeColor)
-                                Text("X (Twitter): @i8r4him")
+                                Text("تابع المطور على X")
                                 Spacer()
                                 Image(systemName: "arrow.up.forward")
                                     .foregroundStyle(.secondary)
@@ -93,20 +97,21 @@ struct HelpFeedbackView: View {
                             HStack {
                                 Image(systemName: "camera.fill")
                                     .foregroundStyle(themeColor)
-                                Text("Instagram: @i8r4him")
+                                Text("تابع المطور على Instagram")
                                 Spacer()
                                 Image(systemName: "arrow.up.forward")
                                     .foregroundStyle(.secondary)
                             }
                         }
                     }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
                 }
             }
             .padding()
         }
+        .gradientBackground(
+            startColor: themeColor.opacity(0.3),
+            endColor: .clear
+        )
         .navigationTitle("المساعدة")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -115,13 +120,19 @@ struct HelpFeedbackView: View {
 private struct HelpSection: View {
     let title: String
     let icon: String
+    let themeColor: Color
     let items: [String]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
+            HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .foregroundStyle(.blue)
+                    .font(.title3)
+                    .foregroundStyle(themeColor)
+                    .frame(width: 32, height: 32)
+                    .background(themeColor.opacity(0.1))
+                    .clipShape(Circle())
+                
                 Text(title)
                     .font(.headline)
             }
@@ -133,14 +144,13 @@ private struct HelpSection: View {
                             .foregroundStyle(.secondary)
                         Text(item)
                             .font(.body)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
             .padding(.leading, 8)
         }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
     }
 }
 

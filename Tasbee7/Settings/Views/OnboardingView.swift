@@ -20,31 +20,10 @@ struct OnboardingView: View {
     
     var body: some View {
         ZStack {
-            // Background gradient
-            LinearGradient(
-                colors: [
-                    themeColor.opacity(0.1),
-                    themeColor.opacity(0.05),
-                    Color.clear
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            Color(.systemBackground)
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Page indicator
-                HStack(spacing: 8) {
-                    ForEach(0..<onboardingPages.count, id: \.self) { index in
-                        Circle()
-                            .fill(currentPage == index ? themeColor : Color.gray.opacity(0.3))
-                            .frame(width: 8, height: 8)
-                            .animation(.spring(response: 0.3), value: currentPage)
-                    }
-                }
-                .padding(.top, 20)
-                .padding(.bottom, 10)
-                
                 // Content
                 TabView(selection: $currentPage) {
                     ForEach(Array(onboardingPages.enumerated()), id: \.offset) { index, page in
@@ -53,54 +32,49 @@ struct OnboardingView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.easeInOut, value: currentPage)
                 
-                // Bottom buttons
-                VStack(spacing: 16) {
-                    if currentPage == onboardingPages.count - 1 {
-                        // Get Started button on last page
-                        Button {
-                            completeOnboarding()
-                        } label: {
-                            Text("ابدأ الآن")
-                                .font(.headline)
-                                .foregroundStyle(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(themeColor)
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                // Bottom section
+                VStack(spacing: 24) {
+                    // Page indicator
+                    HStack(spacing: 6) {
+                        ForEach(0..<onboardingPages.count, id: \.self) { index in
+                            Capsule()
+                                .fill(currentPage == index ? themeColor : Color.secondary.opacity(0.3))
+                                .frame(width: currentPage == index ? 24 : 8, height: 8)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentPage)
                         }
-                        .buttonStyle(.plain)
-                    } else {
-                        // Next and Skip buttons
-                        HStack {
-                            Button {
-                                completeOnboarding()
-                            } label: {
-                                Text("تخطي")
-                                    .foregroundStyle(.secondary)
-                            }
-                            
-                            Spacer()
-                            
-                            Button {
-                                withAnimation {
-                                    currentPage += 1
-                                }
-                            } label: {
-                                HStack(spacing: 8) {
-                                    Text("التالي")
-                                    Image(systemName: "arrow.left")
-                                }
-                                .foregroundStyle(themeColor)
-                            }
-                        }
-                        .font(.headline)
                     }
+                    .padding(.top, 8)
+                    
+                    // Action button
+                    Button {
+                        if currentPage == onboardingPages.count - 1 {
+                            completeOnboarding()
+                        } else {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                currentPage += 1
+                            }
+                        }
+                    } label: {
+                        Text(currentPage == onboardingPages.count - 1 ? "ابدأ الآن" : "متابعة")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(themeColor)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 34)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 40)
             }
         }
+        .gradientBackground(
+            startColor: themeColor.opacity(0.3),
+            endColor: .clear
+        )
         .interactiveDismissDisabled()
     }
     
@@ -117,34 +91,38 @@ struct OnboardingPageView: View {
     let themeColor: Color
     
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: 0) {
             Spacer()
             
-            // Icon
+            // Icon with circular background - matching app aesthetic
             ZStack {
                 Circle()
-                    .fill(themeColor.opacity(0.15))
+                    .fill(themeColor.opacity(0.1))
                     .frame(width: 140, height: 140)
                 
                 Image(systemName: page.icon)
-                    .font(.system(size: 60))
+                    .font(.system(size: 60, weight: .medium))
                     .foregroundStyle(themeColor)
+                    .symbolRenderingMode(.hierarchical)
             }
+            .padding(.bottom, 50)
             
-            // Title and description
-            VStack(spacing: 16) {
-                Text(page.title)
-                    .font(.title.bold())
-                    .multilineTextAlignment(.center)
-                
-                Text(page.description)
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.horizontal, 32)
+            // Title - Large and bold
+            Text(page.title)
+                .font(.system(size: 34, weight: .bold))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+                .padding(.bottom, 16)
             
+            // Description - Readable and clear
+            Text(page.description)
+                .font(.system(size: 17, weight: .regular))
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .lineSpacing(4)
+                .padding(.horizontal, 40)
+            
+            Spacer()
             Spacer()
         }
     }

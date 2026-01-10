@@ -16,22 +16,23 @@ struct FeatureRequestView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(spacing: 32) {
                 // Header
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(spacing: 8) {
                     Text("طلب ميزات جديدة")
                         .font(.largeTitle.bold())
                     
                     Text("نحن نستمع لأفكارك! شاركنا بمقترحاتك لتحسين التطبيق")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
-                .padding(.bottom, 8)
+                .padding(.top, 20)
                 
                 Divider()
                 
                 // Contact Methods
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("طرق التواصل")
                         .font(.title2.bold())
                     
@@ -40,42 +41,22 @@ struct FeatureRequestView: View {
                             HStack {
                                 Image(systemName: "bird.fill")
                                     .foregroundStyle(themeColor)
-                                    .frame(width: 24)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text("X (Twitter)")
-                                        .font(.headline)
-                                    Text("@i8r4him")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
+                                Text("تابع المطور على X")
                                 Spacer()
                                 Image(systemName: "arrow.up.forward")
                                     .foregroundStyle(.secondary)
                             }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(12)
                         }
                         
                         Link(destination: URL(string: "https://instagram.com/i8r4him")!) {
                             HStack {
                                 Image(systemName: "camera.fill")
                                     .foregroundStyle(themeColor)
-                                    .frame(width: 24)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text("Instagram")
-                                        .font(.headline)
-                                    Text("@i8r4him")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
+                                Text("تابع المطور على Instagram")
                                 Spacer()
                                 Image(systemName: "arrow.up.forward")
                                     .foregroundStyle(.secondary)
                             }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(12)
                         }
                     }
                 }
@@ -87,15 +68,19 @@ struct FeatureRequestView: View {
                     Text("نصائح لطلب الميزات")
                         .font(.title2.bold())
                     
-                    VStack(alignment: .leading, spacing: 8) {
-                        InfoRow(icon: "lightbulb.fill", text: "كن محدداً في وصف الميزة المطلوبة")
-                        InfoRow(icon: "checkmark.circle.fill", text: "اشرح كيف ستساعدك هذه الميزة")
-                        InfoRow(icon: "heart.fill", text: "نقدر كل المقترحات ونراجعها بعناية")
+                    VStack(alignment: .leading, spacing: 12) {
+                        InfoRow(icon: "lightbulb.fill", text: "كن محدداً في وصف الميزة المطلوبة", themeColor: themeColor)
+                        InfoRow(icon: "checkmark.circle.fill", text: "اشرح كيف ستساعدك هذه الميزة", themeColor: themeColor)
+                        InfoRow(icon: "heart.fill", text: "نقدر كل المقترحات ونراجعها بعناية", themeColor: themeColor)
                     }
                 }
             }
             .padding()
         }
+        .gradientBackground(
+            startColor: themeColor.opacity(0.3),
+            endColor: .clear
+        )
         .navigationTitle("طلب ميزات")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -104,14 +89,21 @@ struct FeatureRequestView: View {
 private struct InfoRow: View {
     let icon: String
     let text: String
+    let themeColor: Color
     
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
-                .foregroundStyle(.blue)
-                .frame(width: 20)
+                .font(.title3)
+                .foregroundStyle(themeColor)
+                .frame(width: 32, height: 32)
+                .background(themeColor.opacity(0.1))
+                .clipShape(Circle())
+            
             Text(text)
                 .font(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

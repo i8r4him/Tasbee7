@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct PrivacyPolicyView: View {
+    @AppStorage(AppTheme.storageKey) private var themeColorRaw: String = ThemeColor.أزرق.rawValue
+    
     // Privacy policy hosted on GitHub Pages
     private let privacyPolicyURL = URL(string: "https://i8r4him.github.io/Privacy-Policy-for-Tasbee7-App/")!
     
+    private var themeColor: Color {
+        (ThemeColor(rawValue: themeColorRaw) ?? .أزرق).color
+    }
+    
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(spacing: 32) {
                 // Header
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(spacing: 8) {
                     Text("سياسة الخصوصية")
                         .font(.largeTitle.bold())
                     
@@ -23,29 +29,33 @@ struct PrivacyPolicyView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.bottom, 8)
+                .padding(.top, 20)
                 
                 Divider()
                 
                 // Introduction
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("مقدمة")
                         .font(.title2.bold())
                     
                     Text("تطبيق تسبيح يحترم خصوصيتك. توضح سياسة الخصوصية هذه كيفية جمع واستخدام وحماية معلوماتك عند استخدام تطبيقنا المحمول.")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
                 }
                 
                 Divider()
                 
                 // Location Data
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 16) {
                     Text("بيانات الموقع")
                         .font(.title2.bold())
                     
-                    InfoRow(title: "ما نجمع", content: "بيانات الموقع التقريبية (إحداثيات خطوط الطول والعرض)")
-                    InfoRow(title: "لماذا نجمعها", content: "لحساب أوقات شروق وغروب الشمس بدقة لموقعك، مما يسمح لنا بإرسال تذكيرات في الوقت المناسب لأذكار الصباح والمساء")
-                    InfoRow(title: "كيف نستخدمها", content: "تُستخدم بيانات الموقع فقط للحسابات الفلكية. نحن لا نخزن أو نشارك أو نرسل بيانات موقعك إلى أي خوادم أو أطراف ثالثة")
-                    InfoRow(title: "التخزين", content: "تتم معالجة بيانات الموقع محلياً على جهازك فقط")
+                    VStack(alignment: .leading, spacing: 12) {
+                        InfoRow(title: "ما نجمع", content: "بيانات الموقع التقريبية (إحداثيات خطوط الطول والعرض)")
+                        InfoRow(title: "لماذا نجمعها", content: "لحساب أوقات شروق وغروب الشمس بدقة لموقعك، مما يسمح لنا بإرسال تذكيرات في الوقت المناسب لأذكار الصباح والمساء")
+                        InfoRow(title: "كيف نستخدمها", content: "تُستخدم بيانات الموقع فقط للحسابات الفلكية. نحن لا نخزن أو نشارك أو نرسل بيانات موقعك إلى أي خوادم أو أطراف ثالثة")
+                        InfoRow(title: "التخزين", content: "تتم معالجة بيانات الموقع محلياً على جهازك فقط")
+                    }
                 }
                 
                 Divider()
@@ -62,6 +72,7 @@ struct PrivacyPolicyView: View {
                         Text("• لا يتم إرسال أي بيانات إلى خوادم خارجية")
                     }
                     .font(.body)
+                    .foregroundStyle(.secondary)
                 }
                 
                 Divider()
@@ -77,6 +88,7 @@ struct PrivacyPolicyView: View {
                         Text("• جميع بياناتك محلية ويمكنك التحكم الكامل فيها")
                     }
                     .font(.body)
+                    .foregroundStyle(.secondary)
                 }
                 
                 Divider()
@@ -86,18 +98,26 @@ struct PrivacyPolicyView: View {
                     Text("الاتصال بنا")
                         .font(.title2.bold())
                     
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(spacing: 12) {
                         Link(destination: URL(string: "https://x.com/i8r4him")!) {
                             HStack {
                                 Image(systemName: "bird.fill")
-                                Text("X (Twitter): @i8r4him")
+                                    .foregroundStyle(themeColor)
+                                Text("تابع المطور على X")
+                                Spacer()
+                                Image(systemName: "arrow.up.forward")
+                                    .foregroundStyle(.secondary)
                             }
                         }
                         
                         Link(destination: URL(string: "https://instagram.com/i8r4him")!) {
                             HStack {
                                 Image(systemName: "camera.fill")
-                                Text("Instagram: @i8r4him")
+                                    .foregroundStyle(themeColor)
+                                Text("تابع المطور على Instagram")
+                                Spacer()
+                                Image(systemName: "arrow.up.forward")
+                                    .foregroundStyle(.secondary)
                             }
                         }
                     }
@@ -111,12 +131,17 @@ struct PrivacyPolicyView: View {
                         Text("عرض السياسة الكاملة على الويب")
                         Spacer()
                         Image(systemName: "arrow.up.forward")
+                            .foregroundStyle(.secondary)
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(themeColor)
                 }
             }
             .padding()
         }
+        .gradientBackground(
+            startColor: themeColor.opacity(0.3),
+            endColor: .clear
+        )
         .navigationTitle("سياسة الخصوصية")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -127,13 +152,13 @@ private struct InfoRow: View {
     let content: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.headline)
-                .foregroundStyle(.primary)
             Text(content)
                 .font(.body)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

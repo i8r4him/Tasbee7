@@ -16,113 +16,119 @@ struct WhatsNewView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                // Header
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("ما الجديد")
-                        .font(.largeTitle.bold())
+            VStack(spacing: 32) {
+                // Version Header
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Text("الإصدار 1.0")
+                            .font(.title.bold())
+                        
+                        Text("الأحدث")
+                            .font(.caption.bold())
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(themeColor.opacity(0.2))
+                            .foregroundStyle(themeColor)
+                            .cornerRadius(8)
+                    }
                     
-                    Text("اكتشف آخر التحديثات والميزات الجديدة")
+                    Text("نوفمبر 2025")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.bottom, 8)
+                .padding(.top, 20)
                 
                 Divider()
                 
-                // Version 1.0
-                VersionSection(
-                    version: "1.0",
-                    date: "نوفمبر 2025",
-                    isLatest: true,
-                    features: [
-                        FeatureItem(icon: "sparkles", title: "الإطلاق الأولي", description: "تطبيق شامل للأذكار والتسبيحات من كتاب حصن المسلم"),
-                        FeatureItem(icon: "book.fill", title: "مجموعة واسعة من الأذكار", description: "أذكار منظمة في أقسام مختلفة: الصباح والمساء، النوم، الصلاة، وغيرها"),
-                        FeatureItem(icon: "magnifyingglass", title: "بحث متقدم", description: "ابحث في جميع الأذكار بالعنوان أو المحتوى"),
-                        FeatureItem(icon: "star.fill", title: "نظام المفضلة", description: "احفظ أذكارك المفضلة للوصول السريع"),
-                        FeatureItem(icon: "point.3.connected.trianglepath.dotted", title: "عداد تسبيح", description: "عداد رقمي مع إشعارات هابتك وصوتية"),
-                        FeatureItem(icon: "bell.fill", title: "تذكيرات ذكية", description: "تذكيرات تلقائية بناءً على شروق وغروب الشمس"),
-                        FeatureItem(icon: "paintpalette.fill", title: "ألوان قابلة للتخصيص", description: "اختر من مجموعة متنوعة من ألوان الواجهة"),
-                        FeatureItem(icon: "textformat", title: "خطوط عربية جميلة", description: "دعم خط شهرزاد الجميل لعرض الأذكار")
-                    ]
-                )
+                // Features List
+                VStack(alignment: .leading, spacing: 24) {
+                    FeatureRow(
+                        icon: "sparkles",
+                        title: "الإطلاق الأولي",
+                        description: "تطبيق شامل للأذكار والتسبيحات من كتاب حصن المسلم"
+                    )
+                    
+                    FeatureRow(
+                        icon: "book.fill",
+                        title: "مجموعة واسعة من الأذكار",
+                        description: "أذكار منظمة في أقسام مختلفة: الصباح والمساء، النوم، الصلاة، وغيرها"
+                    )
+                    
+                    FeatureRow(
+                        icon: "magnifyingglass",
+                        title: "بحث متقدم",
+                        description: "ابحث في جميع الأذكار بالعنوان أو المحتوى"
+                    )
+                    
+                    FeatureRow(
+                        icon: "star.fill",
+                        title: "نظام المفضلة",
+                        description: "احفظ أذكارك المفضلة للوصول السريع"
+                    )
+                    
+                    FeatureRow(
+                        icon: "point.3.connected.trianglepath.dotted",
+                        title: "عداد تسبيح",
+                        description: "عداد رقمي مع إشعارات هابتك وصوتية"
+                    )
+                    
+                    FeatureRow(
+                        icon: "bell.fill",
+                        title: "تذكيرات ذكية",
+                        description: "تذكيرات تلقائية بناءً على شروق وغروب الشمس"
+                    )
+                    
+                    FeatureRow(
+                        icon: "paintpalette.fill",
+                        title: "ألوان قابلة للتخصيص",
+                        description: "اختر من مجموعة متنوعة من ألوان الواجهة"
+                    )
+                    
+                    FeatureRow(
+                        icon: "textformat",
+                        title: "خطوط عربية جميلة",
+                        description: "دعم خط شهرزاد الجميل لعرض الأذكار"
+                    )
+                }
             }
             .padding()
         }
+        .gradientBackground(
+            startColor: themeColor.opacity(0.3),
+            endColor: .clear
+        )
         .navigationTitle("ما الجديد")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-private struct VersionSection: View {
-    let version: String
-    let date: String
-    let isLatest: Bool
-    let features: [FeatureItem]
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text("الإصدار \(version)")
-                            .font(.title2.bold())
-                        
-                        if isLatest {
-                            Text("الأحدث")
-                                .font(.caption)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.blue.opacity(0.2))
-                                .foregroundStyle(.blue)
-                                .cornerRadius(8)
-                        }
-                    }
-                    
-                    Text(date)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                
-                Spacer()
-            }
-            
-            VStack(alignment: .leading, spacing: 16) {
-                ForEach(features) { feature in
-                    FeatureRow(feature: feature)
-                }
-            }
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-    }
-}
-
-private struct FeatureItem: Identifiable {
-    let id = UUID()
+private struct FeatureRow: View {
     let icon: String
     let title: String
     let description: String
-}
-
-private struct FeatureRow: View {
-    let feature: FeatureItem
+    @AppStorage(AppTheme.storageKey) private var themeColorRaw: String = ThemeColor.أزرق.rawValue
+    
+    private var themeColor: Color {
+        (ThemeColor(rawValue: themeColorRaw) ?? .أزرق).color
+    }
     
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: feature.icon)
-                .foregroundStyle(.blue)
-                .frame(width: 24)
-                .padding(.top, 2)
+        HStack(alignment: .top, spacing: 16) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundStyle(themeColor)
+                .frame(width: 32, height: 32)
+                .background(themeColor.opacity(0.1))
+                .clipShape(Circle())
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(feature.title)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
                     .font(.headline)
                 
-                Text(feature.description)
+                Text(description)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
