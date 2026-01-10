@@ -14,6 +14,10 @@ struct SettingsView: View {
     
     private let shareURL = URL(string: "https://tasbee7.app")!
     
+    private var themeColor: Color {
+        (ThemeColor(rawValue: themeColorRaw) ?? .أزرق).color
+    }
+    
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "غير معروف"
     }
@@ -91,7 +95,11 @@ struct SettingsView: View {
                 
                 // 4. Share - Social actions
                 Section("المشاركة") {
-                    ShareLink(item: shareURL) {
+                    ShareLink(
+                        item: shareURL,
+                        subject: Text("تطبيق تسبيح - رفيقك اليومي للأذكار والتسبيحات"),
+                        message: Text("تطبيق تسبيح - رفيقك اليومي للأذكار والتسبيحات\n\nتطبيق شامل ومجاني للأذكار والتسبيحات اليومية من كتاب حصن المسلم.\n\nحمله الآن: \(shareURL.absoluteString)")
+                    ) {
                         Label("نشر تسبيح", systemImage: "square.and.arrow.up.fill")
                     }
                 }
@@ -111,6 +119,15 @@ struct SettingsView: View {
                 
                 // 6. Version info
                 Section {
+                    Image("sign")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 80)
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(themeColor)
+                        .listRowBackground(Color.clear)
+                    
                     VStack(spacing: 5) {
                         VStack(spacing: 6) {
                             Text("صدقة جارية عن فاعلا خير")
