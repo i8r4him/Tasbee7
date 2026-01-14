@@ -137,7 +137,7 @@ struct SearchView: View {
             .toolbarTitleDisplayMode(.inlineLarge)
             .searchable(
                 text: $searchText,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .navigationBarDrawer(displayMode: .automatic),
                 prompt: "ابحث في الأذكار..."
             )
             .onSubmit(of: .search) {

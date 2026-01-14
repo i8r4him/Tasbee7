@@ -11,7 +11,6 @@ struct OnboardingView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage(AppTheme.storageKey) private var themeColorRaw: String = ThemeColor.أزرق.rawValue
     
-    @State private var currentPage = 0
     @Environment(\.dismiss) private var dismiss
     
     private var themeColor: Color {
@@ -19,57 +18,104 @@ struct OnboardingView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color(.systemBackground)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                // Content
-                TabView(selection: $currentPage) {
-                    ForEach(Array(onboardingPages.enumerated()), id: \.offset) { index, page in
-                        OnboardingPageView(page: page, themeColor: themeColor)
-                            .tag(index)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(.easeInOut, value: currentPage)
+        ScrollView {
+            VStack(spacing: 32) {
+                Spacer()
+                    .frame(height: 20)
                 
-                // Bottom section
-                VStack(spacing: 24) {
-                    // Page indicator
-                    HStack(spacing: 6) {
-                        ForEach(0..<onboardingPages.count, id: \.self) { index in
-                            Capsule()
-                                .fill(currentPage == index ? themeColor : Color.secondary.opacity(0.3))
-                                .frame(width: currentPage == index ? 24 : 8, height: 8)
-                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentPage)
-                        }
-                    }
-                    .padding(.top, 8)
+                // App Icon
+                ZStack {
+                    Circle()
+                        .fill(themeColor.opacity(0.15))
+                        .frame(width: 140, height: 140)
                     
-                    // Action button
-                    Button {
-                        if currentPage == onboardingPages.count - 1 {
-                            completeOnboarding()
-                        } else {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                currentPage += 1
-                            }
-                        }
-                    } label: {
-                        Text(currentPage == onboardingPages.count - 1 ? "ابدأ الآن" : "متابعة")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(themeColor)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 34)
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 70))
+                        .foregroundStyle(themeColor)
+                        .symbolRenderingMode(.hierarchical)
                 }
+                .padding(.bottom, 8)
+                
+                // Welcome Text
+                VStack(spacing: 12) {
+                    Text("مرحباً بك في تسبيح")
+                        .font(.system(size: 34, weight: .bold))
+                    
+                    Text("رفيقك اليومي للأذكار والتسبيحات")
+                        .font(.system(size: 17))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.bottom, 24)
+                
+                // Features List
+                VStack(alignment: .leading, spacing: 20) {
+                    OnboardingFeature(
+                        icon: "book.pages.fill",
+                        title: "أذكار شاملة",
+                        description: "مجموعة كاملة من الأذكار اليومية من حصن المسلم",
+                        themeColor: themeColor
+                    )
+                    
+                    OnboardingFeature(
+                        icon: "bell.badge.fill",
+                        title: "تذكير ذكي",
+                        description: "تذكيرات بناءً على أوقات الشروق والغروب في موقعك",
+                        themeColor: themeColor
+                    )
+                    
+                    OnboardingFeature(
+                        icon: "point.3.connected.trianglepath.dotted",
+                        title: "سبحة رقمية",
+                        description: "عداد تسبيح مع اهتزاز لطيف لمساعدتك على الذكر",
+                        themeColor: themeColor
+                    )
+                    
+                    OnboardingFeature(
+                        icon: "star.fill",
+                        title: "نظام المفضلة",
+                        description: "احفظ أذكارك المفضلة للوصول السريع",
+                        themeColor: themeColor
+                    )
+                    
+                    OnboardingFeature(
+                        icon: "magnifyingglass",
+                        title: "بحث متقدم",
+                        description: "ابحث عن أي ذكر بسهولة وسرعة",
+                        themeColor: themeColor
+                    )
+                    
+                    OnboardingFeature(
+                        icon: "paintpalette.fill",
+                        title: "تخصيص الواجهة",
+                        description: "اختر اللون المفضل لديك",
+                        themeColor: themeColor
+                    )
+                }
+                .padding(.horizontal, 20)
+                
+                Spacer()
+                    .frame(height: 40)
             }
+            .frame(maxWidth: .infinity)
+        }
+        .safeAreaInset(edge: .bottom) {
+            // Continue Button
+            Button {
+                completeOnboarding()
+            } label: {
+                Text("ابدأ الآن")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(themeColor)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(.regularMaterial)
         }
         .gradientBackground(
             startColor: themeColor.opacity(0.3),
@@ -86,86 +132,41 @@ struct OnboardingView: View {
     }
 }
 
-struct OnboardingPageView: View {
-    let page: OnboardingPage
+struct OnboardingFeature: View {
+    let icon: String
+    let title: String
+    let description: String
     let themeColor: Color
     
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-            
-            // Icon with circular background - matching app aesthetic
+        HStack(alignment: .top, spacing: 16) {
+            // Icon
             ZStack {
                 Circle()
                     .fill(themeColor.opacity(0.1))
-                    .frame(width: 140, height: 140)
+                    .frame(width: 48, height: 48)
                 
-                Image(systemName: page.icon)
-                    .font(.system(size: 60, weight: .medium))
+                Image(systemName: icon)
+                    .font(.system(size: 24))
                     .foregroundStyle(themeColor)
                     .symbolRenderingMode(.hierarchical)
             }
-            .padding(.bottom, 50)
             
-            // Title - Large and bold
-            Text(page.title)
-                .font(.system(size: 34, weight: .bold))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
-                .padding(.bottom, 16)
+            // Text
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 17, weight: .semibold))
+                
+                Text(description)
+                    .font(.system(size: 15))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             
-            // Description - Readable and clear
-            Text(page.description)
-                .font(.system(size: 17, weight: .regular))
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .lineSpacing(4)
-                .padding(.horizontal, 40)
-            
-            Spacer()
             Spacer()
         }
     }
 }
-
-struct OnboardingPage {
-    let icon: String
-    let title: String
-    let description: String
-}
-
-private let onboardingPages: [OnboardingPage] = [
-    OnboardingPage(
-        icon: "book.pages.fill",
-        title: "أذكار شاملة",
-        description: "مجموعة كاملة من الأذكار اليومية من حصن المسلم، منظمة بشكل سهل وواضح"
-    ),
-    OnboardingPage(
-        icon: "bell.badge.fill",
-        title: "تذكير ذكي",
-        description: "احصل على تذكيرات أذكار الصباح والمساء بناءً على أوقات الشروق والغروب في موقعك"
-    ),
-    OnboardingPage(
-        icon: "point.3.connected.trianglepath.dotted",
-        title: "سبحة رقمية",
-        description: "سبحة إلكترونية مع اهتزاز لطيف لمساعدتك على التسبيح والذكر"
-    ),
-    OnboardingPage(
-        icon: "star.fill",
-        title: "المفضلة",
-        description: "احفظ الأذكار المفضلة لديك للوصول السريع إليها في أي وقت"
-    ),
-    OnboardingPage(
-        icon: "magnifyingglass",
-        title: "بحث سريع",
-        description: "ابحث عن أي ذكر بسهولة وسرعة من خلال البحث المتقدم"
-    ),
-    OnboardingPage(
-        icon: "paintpalette.fill",
-        title: "تخصيص الواجهة",
-        description: "اختر اللون المفضل لديك وخصص تجربتك في التطبيق"
-    )
-]
 
 #Preview {
     OnboardingView()

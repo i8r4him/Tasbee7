@@ -29,51 +29,73 @@ struct FeatureRequestView: View {
                 }
                 .padding(.top, 20)
                 
-                Divider()
-                
-                // Contact Methods
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("طرق التواصل")
-                        .font(.title2.bold())
+                // Guidelines Card
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "lightbulb.fill")
+                            .font(.title2)
+                            .foregroundStyle(themeColor)
+                            .frame(width: 40, height: 40)
+                        
+                        Text("نصائح مهمة")
+                            .font(.title3.bold())
+                    }
                     
-                    VStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        GuidelineItem(text: "كن محدداً في وصف الميزة المطلوبة", themeColor: themeColor)
+                        GuidelineItem(text: "اشرح كيف ستساعدك هذه الميزة", themeColor: themeColor)
+                        GuidelineItem(text: "نقدر كل المقترحات ونراجعها بعناية", themeColor: themeColor)
+                        GuidelineItem(text: "وقت الرد قد يستغرق عدة أيام", themeColor: themeColor)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
+                .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
+                
+                // Contact Section
+                VStack(spacing: 16) {
+                    VStack(spacing: 8) {
+                        Text("تواصل معنا")
+                            .font(.title2.bold())
+                        
+                        Text("شاركنا أفكارك ومقترحاتك")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    HStack(spacing: 16) {
                         Link(destination: URL(string: "https://x.com/i8r4him")!) {
-                            HStack {
+                            VStack(spacing: 12) {
                                 Image(systemName: "bird.fill")
+                                    .font(.system(size: 32))
                                     .foregroundStyle(themeColor)
-                                Text("تابع المطور على X")
-                                Spacer()
-                                Image(systemName: "arrow.up.forward")
-                                    .foregroundStyle(.secondary)
+                                
+                                Text("X")
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundStyle(.primary)
                             }
+                            .frame(maxWidth: .infinity, minHeight: 80)
+                            .padding(.vertical, 20)
+                            .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
                         }
                         
                         Link(destination: URL(string: "https://instagram.com/i8r4him")!) {
-                            HStack {
+                            VStack(spacing: 12) {
                                 Image(systemName: "camera.fill")
+                                    .font(.system(size: 32))
                                     .foregroundStyle(themeColor)
-                                Text("تابع المطور على Instagram")
-                                Spacer()
-                                Image(systemName: "arrow.up.forward")
-                                    .foregroundStyle(.secondary)
+                                
+                                Text("Instagram")
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundStyle(.primary)
                             }
+                            .frame(maxWidth: .infinity, minHeight: 80)
+                            .padding(.vertical, 20)
+                            .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
                         }
                     }
                 }
-                
-                Divider()
-                
-                // Guidelines
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("نصائح لطلب الميزات")
-                        .font(.title2.bold())
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        InfoRow(icon: "lightbulb.fill", text: "كن محدداً في وصف الميزة المطلوبة", themeColor: themeColor)
-                        InfoRow(icon: "checkmark.circle.fill", text: "اشرح كيف ستساعدك هذه الميزة", themeColor: themeColor)
-                        InfoRow(icon: "heart.fill", text: "نقدر كل المقترحات ونراجعها بعناية", themeColor: themeColor)
-                    }
-                }
+                .padding(.top, 8)
             }
             .padding()
         }
@@ -81,28 +103,26 @@ struct FeatureRequestView: View {
             startColor: themeColor.opacity(0.3),
             endColor: .clear
         )
+        .symbolRenderingMode(.hierarchical)
         .navigationTitle("طلب ميزات")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-private struct InfoRow: View {
-    let icon: String
+private struct GuidelineItem: View {
     let text: String
     let themeColor: Color
     
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundStyle(themeColor)
-                .frame(width: 32, height: 32)
-                .background(themeColor.opacity(0.1))
-                .clipShape(Circle())
+            Circle()
+                .fill(themeColor)
+                .frame(width: 6, height: 6)
+                .padding(.top, 7)
             
             Text(text)
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }

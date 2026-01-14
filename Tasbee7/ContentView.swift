@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 enum Tabs {
     case home, sebha, settings, search
@@ -16,6 +17,10 @@ struct ContentView: View {
     
     @State private var selectedTab: Tabs = .home
     @State private var search: String = "ابحث هنا"
+    @State private var subscriptionStatusState: EntitlementTaskState<SubscriptionStatus> = .loading
+    
+    @Environment(SubscriptionStatusModel.self) var subscriptionStatusModel: SubscriptionStatusModel
+    @Environment(\.subscriptionIDs) private var subscriptionIDs
     
     private var themeColor: Color {
         (ThemeColor(rawValue: themeColorRaw) ?? .أزرق).color
@@ -40,10 +45,31 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NotificationTapped"))) { notification in
             selectedTab = .home
         }
+        .subscriptionStatusTask(for: subscriptionIDs.group) { taskStatus in
+            self.subscriptionStatusState = taskStatus.map { statuses in
+                StoreManager.shared.subscriptionStatus(
+                    for: statuses,
+                    ids: subscriptionIDs
+                )
+            }
+            
+            switch self.subscriptionStatusState {
+            case .failure(let error):
+                subscriptionStatusModel.status = .notSubscribed
+                print("Failed to check subscription status: \(error)")
+            case .success(let status):
+                subscriptionStatusModel.status = status
+            case .loading: 
+                break
+            @unknown default: 
+                break
+            }
+        }
     }
 }
 
 #Preview {
     ContentView()
         .environment(FavoritesStore())
+        .environment(SubscriptionStatusModel())
 }

@@ -1,0 +1,107 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "EE337E4B",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6755359818",
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_developerTeamID" : "DMKPB2487F",
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 790082745.56871605,
+    "_locale" : "ar",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21891681",
+      "localizations" : [
+
+      ],
+      "name" : "Tasbee7 Premium Membership",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "8.99",
+          "familyShareable" : true,
+          "groupNumber" : 2,
+          "internalID" : "6757796705",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "  اشتراك سنوي مع خصم 30٪ - وصول كامل لجميع الميزات",
+              "displayName" : "عضوية تسبيح - سنوي",
+              "locale" : "ar"
+            }
+          ],
+          "productID" : "com.tasbee7.premium.annual",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Tasbee7 Premium Annual",
+          "subscriptionGroupID" : "21891681",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : true,
+          "groupNumber" : 1,
+          "internalID" : "6757796623",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "  اشتراك شهري يمنحك الوصول إلى جميع الميزات الحصرية ",
+              "displayName" : "عضوية تسبيح - شهري",
+              "locale" : "ar"
+            }
+          ],
+          "productID" : "com.tasbee7.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Tasbee7 Premium Monthly",
+          "subscriptionGroupID" : "21891681",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

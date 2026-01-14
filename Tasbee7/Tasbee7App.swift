@@ -11,6 +11,7 @@ import UIKit
 @main
 struct Tasbee7App: App {
     @State private var favorites = FavoritesStore()
+    @State private var subscriptionStatus = SubscriptionStatusModel()
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var showOnboarding = false
 
@@ -22,12 +23,16 @@ struct Tasbee7App: App {
         Task { @MainActor in
             await NotificationManager.shared.requestAuthorization()
         }
+        
+        // Initialize Store Manager
+        StoreManager.createSharedInstance()
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(favorites)
+                .environment(subscriptionStatus)
                 .onAppear {
                     // Show onboarding on first launch
                     if !hasCompletedOnboarding {
@@ -47,6 +52,11 @@ struct Tasbee7App: App {
                 }
                 .sheet(isPresented: $showOnboarding) {
                     OnboardingView()
+                }
+                .task {
+                    // Monitor transactions
+                    await StoreManager.shared.observeTransactionUpdates()
+                    await StoreManager.shared.checkForUnfinishedTransactions()
                 }
         }
     }

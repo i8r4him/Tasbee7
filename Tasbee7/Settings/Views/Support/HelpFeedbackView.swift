@@ -29,10 +29,8 @@ struct HelpFeedbackView: View {
                 }
                 .padding(.top, 20)
                 
-                Divider()
-                
                 // Help Sections
-                VStack(spacing: 20) {
+                VStack(spacing: 24) {
                     HelpSection(
                         title: "كيفية الاستخدام",
                         icon: "book.fill",
@@ -53,8 +51,8 @@ struct HelpFeedbackView: View {
                         items: [
                             "اذهب إلى الإعدادات → الإشعارات",
                             "فعّل تذكير الصباح أو المساء",
-                            "اسمح بالوصول للموقع لحساب أوقات شروق/غروب الشمس",
-                            "سيتم إرسال التذكير بعد 15 دقيقة من شروق/غروب الشمس"
+                            "اسمح بالوصول للموقع لحساب الأوقات",
+                            "التذكير بعد 15 دقيقة من شروق/غروب الشمس"
                         ]
                     )
                     
@@ -64,47 +62,57 @@ struct HelpFeedbackView: View {
                         themeColor: themeColor,
                         items: [
                             "اضغط على أيقونة النجم في أي ذكر",
-                            "ستظهر في قسم المفضلة في الصفحة الرئيسية",
+                            "ستظهر في قسم المفضلة بالصفحة الرئيسية",
                             "يمكنك إزالة المفضلة بنفس الطريقة"
                         ]
                     )
                 }
-                
-                Divider()
+                .padding(.top, 8)
                 
                 // Contact Support
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("تواصل معنا")
-                        .font(.title2.bold())
+                VStack(spacing: 16) {
+                    VStack(spacing: 8) {
+                        Text("تواصل معنا")
+                            .font(.title2.bold())
+                        
+                        Text("لديك سؤال أو اقتراح؟")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
                     
-                    Text("إذا كنت بحاجة إلى مساعدة إضافية أو لديك ملاحظات، لا تتردد في التواصل معنا:")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                    
-                    VStack(spacing: 12) {
+                    HStack(spacing: 16) {
                         Link(destination: URL(string: "https://x.com/i8r4him")!) {
-                            HStack {
+                            VStack(spacing: 12) {
                                 Image(systemName: "bird.fill")
+                                    .font(.system(size: 32))
                                     .foregroundStyle(themeColor)
-                                Text("تابع المطور على X")
-                                Spacer()
-                                Image(systemName: "arrow.up.forward")
-                                    .foregroundStyle(.secondary)
+                                
+                                Text("X")
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundStyle(.primary)
                             }
+                            .frame(maxWidth: .infinity, minHeight: 80)
+                            .padding(.vertical, 20)
+                            .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
                         }
                         
                         Link(destination: URL(string: "https://instagram.com/i8r4him")!) {
-                            HStack {
+                            VStack(spacing: 12) {
                                 Image(systemName: "camera.fill")
+                                    .font(.system(size: 32))
                                     .foregroundStyle(themeColor)
-                                Text("تابع المطور على Instagram")
-                                Spacer()
-                                Image(systemName: "arrow.up.forward")
-                                    .foregroundStyle(.secondary)
+                                
+                                Text("Instagram")
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundStyle(.primary)
                             }
+                            .frame(maxWidth: .infinity, minHeight: 80)
+                            .padding(.vertical, 20)
+                            .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
                         }
                     }
                 }
+                .padding(.top, 16)
             }
             .padding()
         }
@@ -112,6 +120,7 @@ struct HelpFeedbackView: View {
             startColor: themeColor.opacity(0.3),
             endColor: .clear
         )
+        .symbolRenderingMode(.hierarchical)
         .navigationTitle("المساعدة")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -124,33 +133,38 @@ private struct HelpSection: View {
     let items: [String]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 16) {
+            // Section Header
             HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.title3)
+                    .font(.title2)
                     .foregroundStyle(themeColor)
-                    .frame(width: 32, height: 32)
-                    .background(themeColor.opacity(0.1))
-                    .clipShape(Circle())
+                    .frame(width: 40, height: 40)
                 
                 Text(title)
-                    .font(.headline)
+                    .font(.title3.bold())
             }
             
-            VStack(alignment: .leading, spacing: 8) {
+            // Section Items
+            VStack(alignment: .leading, spacing: 10) {
                 ForEach(items, id: \.self) { item in
-                    HStack(alignment: .top, spacing: 8) {
-                        Text("•")
-                            .foregroundStyle(.secondary)
+                    HStack(alignment: .top, spacing: 12) {
+                        Circle()
+                            .fill(themeColor)
+                            .frame(width: 6, height: 6)
+                            .padding(.top, 7)
+                        
                         Text(item)
                             .font(.body)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.primary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
-            .padding(.leading, 8)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(20)
+        .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
     }
 }
 

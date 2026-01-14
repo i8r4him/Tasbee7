@@ -19,7 +19,7 @@ struct PrivacyPolicyView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 32) {
+            VStack(spacing: 24) {
                 // Header
                 VStack(spacing: 8) {
                     Text("سياسة الخصوصية")
@@ -31,109 +31,90 @@ struct PrivacyPolicyView: View {
                 }
                 .padding(.top, 20)
                 
-                Divider()
-                
-                // Introduction
+                // Introduction Card
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("مقدمة")
-                        .font(.title2.bold())
+                    HStack(spacing: 12) {
+                        Image(systemName: "lock.shield.fill")
+                            .font(.title2)
+                            .foregroundStyle(themeColor)
+                            .frame(width: 40, height: 40)
+                        
+                        Text("مقدمة")
+                            .font(.title3.bold())
+                    }
                     
                     Text("تطبيق تسبيح يحترم خصوصيتك. توضح سياسة الخصوصية هذه كيفية جمع واستخدام وحماية معلوماتك عند استخدام تطبيقنا المحمول.")
                         .font(.body)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
+                .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
                 
-                Divider()
+                // Location Data Card
+                PrivacySection(
+                    title: "بيانات الموقع",
+                    icon: "location.fill",
+                    themeColor: themeColor,
+                    items: [
+                        ("ما نجمع", "بيانات الموقع التقريبية (إحداثيات خطوط الطول والعرض)"),
+                        ("لماذا نجمعها", "لحساب أوقات شروق وغروب الشمس لإرسال تذكيرات في الوقت المناسب"),
+                        ("كيف نستخدمها", "للحسابات الفلكية فقط. لا نخزن أو نشارك بيانات موقعك"),
+                        ("التخزين", "تتم المعالجة محلياً على جهازك فقط")
+                    ]
+                )
                 
-                // Location Data
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("بيانات الموقع")
-                        .font(.title2.bold())
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        InfoRow(title: "ما نجمع", content: "بيانات الموقع التقريبية (إحداثيات خطوط الطول والعرض)")
-                        InfoRow(title: "لماذا نجمعها", content: "لحساب أوقات شروق وغروب الشمس بدقة لموقعك، مما يسمح لنا بإرسال تذكيرات في الوقت المناسب لأذكار الصباح والمساء")
-                        InfoRow(title: "كيف نستخدمها", content: "تُستخدم بيانات الموقع فقط للحسابات الفلكية. نحن لا نخزن أو نشارك أو نرسل بيانات موقعك إلى أي خوادم أو أطراف ثالثة")
-                        InfoRow(title: "التخزين", content: "تتم معالجة بيانات الموقع محلياً على جهازك فقط")
-                    }
-                }
+                // Data Storage Card
+                PrivacySection(
+                    title: "تخزين البيانات",
+                    icon: "externaldrive.fill",
+                    themeColor: themeColor,
+                    items: [
+                        "جميع البيانات تُخزن محلياً على جهازك",
+                        "لا نملك إمكانية الوصول إلى بياناتك",
+                        "لا نستخدم خدمات تتبع خارجية",
+                        "لا يتم إرسال بيانات إلى خوادم خارجية"
+                    ]
+                )
                 
-                Divider()
+                // Your Rights Card
+                PrivacySection(
+                    title: "حقوقك",
+                    icon: "hand.raised.fill",
+                    themeColor: themeColor,
+                    items: [
+                        "تعطيل خدمات الموقع في أي وقت من إعدادات iOS",
+                        "حذف التطبيق يزيل جميع البيانات المخزنة",
+                        "التحكم الكامل في جميع بياناتك المحلية"
+                    ]
+                )
                 
-                // Data Storage
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("تخزين البيانات")
-                        .font(.title2.bold())
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("• جميع بيانات التطبيق (المفضلة، الإعدادات، التفضيلات) تُخزن محلياً على جهازك")
-                        Text("• نحن لا نملك إمكانية الوصول إلى بياناتك الشخصية")
-                        Text("• لا نستخدم أي خدمات تحليل أو تتبع تابعة لأطراف ثالثة")
-                        Text("• لا يتم إرسال أي بيانات إلى خوادم خارجية")
-                    }
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                }
-                
-                Divider()
-                
-                // Your Rights
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("حقوقك")
-                        .font(.title2.bold())
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("• يمكنك تعطيل خدمات الموقع في أي وقت من خلال إعدادات iOS")
-                        Text("• يمكنك حذف التطبيق في أي وقت، مما سيزيل جميع البيانات المخزنة محلياً")
-                        Text("• جميع بياناتك محلية ويمكنك التحكم الكامل فيها")
-                    }
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                }
-                
-                Divider()
-                
-                // Contact
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("الاتصال بنا")
-                        .font(.title2.bold())
-                    
-                    VStack(spacing: 12) {
-                        Link(destination: URL(string: "https://x.com/i8r4him")!) {
-                            HStack {
-                                Image(systemName: "bird.fill")
-                                    .foregroundStyle(themeColor)
-                                Text("تابع المطور على X")
-                                Spacer()
-                                Image(systemName: "arrow.up.forward")
-                                    .foregroundStyle(.secondary)
-                            }
+                // Full Policy Link Card
+                Link(destination: privacyPolicyURL) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "doc.text.fill")
+                            .font(.title2)
+                            .foregroundStyle(themeColor)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("عرض السياسة الكاملة")
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(.primary)
+                            
+                            Text("على الويب")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
                         
-                        Link(destination: URL(string: "https://instagram.com/i8r4him")!) {
-                            HStack {
-                                Image(systemName: "camera.fill")
-                                    .foregroundStyle(themeColor)
-                                Text("تابع المطور على Instagram")
-                                Spacer()
-                                Image(systemName: "arrow.up.forward")
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                    }
-                }
-                
-                Divider()
-                
-                // Link to full policy
-                Link(destination: privacyPolicyURL) {
-                    HStack {
-                        Text("عرض السياسة الكاملة على الويب")
                         Spacer()
-                        Image(systemName: "arrow.up.forward")
-                            .foregroundStyle(.secondary)
+                        
+                        Image(systemName: "arrow.up.forward.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(themeColor)
                     }
-                    .foregroundStyle(themeColor)
+                    .padding(20)
+                    .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
                 }
             }
             .padding()
@@ -142,24 +123,78 @@ struct PrivacyPolicyView: View {
             startColor: themeColor.opacity(0.3),
             endColor: .clear
         )
+        .symbolRenderingMode(.hierarchical)
         .navigationTitle("سياسة الخصوصية")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-private struct InfoRow: View {
+private struct PrivacySection: View {
     let title: String
-    let content: String
+    let icon: String
+    let themeColor: Color
+    let items: [(String, String)]
+    
+    init(title: String, icon: String, themeColor: Color, items: [(String, String)]) {
+        self.title = title
+        self.icon = icon
+        self.themeColor = themeColor
+        self.items = items
+    }
+    
+    init(title: String, icon: String, themeColor: Color, items: [String]) {
+        self.title = title
+        self.icon = icon
+        self.themeColor = themeColor
+        self.items = items.map { ("", $0) }
+    }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .font(.headline)
-            Text(content)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundStyle(themeColor)
+                    .frame(width: 40, height: 40)
+                
+                Text(title)
+                    .font(.title3.bold())
+            }
+            
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                    if item.0.isEmpty {
+                        // Simple bullet point
+                        HStack(alignment: .top, spacing: 12) {
+                            Circle()
+                                .fill(themeColor)
+                                .frame(width: 6, height: 6)
+                                .padding(.top, 7)
+                            
+                            Text(item.1)
+                                .font(.body)
+                                .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    } else {
+                        // Title and content
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(item.0)
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(themeColor)
+                            
+                            Text(item.1)
+                                .font(.body)
+                                .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(20)
+        .glassEffect(.regular.interactive(false), in: RoundedRectangle(cornerRadius: 20))
     }
 }
 
@@ -168,4 +203,3 @@ private struct InfoRow: View {
         PrivacyPolicyView()
     }
 }
-
