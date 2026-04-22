@@ -51,9 +51,6 @@
             ReferencedContainer = "container:Tasbee7.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <StoreKitConfigurationFileReference
-         identifier = "../../Tasbee7/Settings/Tasbee7.storekit">
-      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

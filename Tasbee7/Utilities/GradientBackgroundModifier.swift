@@ -26,6 +26,17 @@ struct GradientBackgroundModifier: ViewModifier {
     }
 }
 
+struct AppGradientBackgroundModifier: ViewModifier {
+    @Environment(AppSettings.self) private var appSettings
+
+    func body(content: Content) -> some View {
+        content.gradientBackground(
+            startColor: appSettings.themeColor.opacity(0.3),
+            endColor: .clear
+        )
+    }
+}
+
 // MARK: - View Extension
 extension View {
     /// Applies a gradient background to the view
@@ -58,6 +69,10 @@ extension View {
             startColor: AppTheme.selectedThemeColor.color.opacity(0.3),
             endColor: .clear
         )
+    }
+
+    func appGradientBackground() -> some View {
+        self.modifier(AppGradientBackgroundModifier())
     }
 }
 

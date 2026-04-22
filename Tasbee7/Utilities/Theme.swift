@@ -23,6 +23,14 @@ enum ThemeColor: String, CaseIterable, Identifiable {
 
     var displayName: String { rawValue.capitalized }
 
+    static func resolved(from rawValue: String) -> ThemeColor {
+        ThemeColor(rawValue: rawValue) ?? .أزرق
+    }
+
+    static func resolvedColor(from rawValue: String) -> Color {
+        resolved(from: rawValue).color
+    }
+
     var color: Color {
         switch self {
         case .أزرق: return .blue
@@ -70,43 +78,37 @@ enum AppTheme {
 enum AthkarFont: String, CaseIterable, Identifiable {
     case system = "النظام"
     case scheherazade = "شهرزاد"
+
+    private static let candidateNames = [
+        "ScheherazadeNew-Regular",
+        "ScheherazadeNew",
+        "Scheherazade New",
+        "ScheherazadeNewRegular"
+    ]
+
+    private static let candidateFamilies = [
+        "Scheherazade New",
+        "ScheherazadeNew",
+        "Scheherazade"
+    ]
     
     var id: String { rawValue }
     
     var displayName: String { rawValue }
     
     var font: Font {
+        font(size: 17)
+    }
+
+    func font(size: CGFloat) -> Font {
         switch self {
         case .system:
-            return .system(.body, design: .default)
+            return .system(size: size, design: .default)
         case .scheherazade:
-            // Try multiple possible font names for Scheherazade
-            let possibleNames = [
-                "ScheherazadeNew-Regular",
-                "ScheherazadeNew",
-                "Scheherazade New",
-                "ScheherazadeNewRegular"
-            ]
-            
-            for fontName in possibleNames {
-                if let font = UIFont(name: fontName, size: 17) {
-                    return Font(font)
-                }
+            if let resolvedFont = resolvedUIFont(size: size) {
+                return Font(resolvedFont)
             }
-            
-            // If font not found, try to find it by family name
-            let familyNames = ["Scheherazade New", "ScheherazadeNew", "Scheherazade"]
-            for familyName in familyNames {
-                let familyFonts = UIFont.fontNames(forFamilyName: familyName)
-                if !familyFonts.isEmpty, let firstFont = familyFonts.first {
-                    if let font = UIFont(name: firstFont, size: 17) {
-                        return Font(font)
-                    }
-                }
-            }
-            
-            // Fallback to system serif if font not found
-            return .system(.body, design: .serif)
+            return .system(size: size, design: .serif)
         }
     }
     
@@ -118,5 +120,27 @@ enum AthkarFont: String, CaseIterable, Identifiable {
     static func setSelectedFont(_ font: AthkarFont) {
         UserDefaults.standard.set(font.rawValue, forKey: AppTheme.fontStorageKey)
     }
-}
 
+    private func resolvedUIFont(size: CGFloat) -> UIFont? {
+        switch self {
+        case .system:
+            return nil
+        case .scheherazade:
+            for fontName in Self.candidateNames {
+                if let font = UIFont(name: fontName, size: size) {
+                    return font
+                }
+            }
+
+            for familyName in Self.candidateFamilies {
+                let familyFonts = UIFont.fontNames(forFamilyName: familyName)
+                if let firstFont = familyFonts.first,
+                   let font = UIFont(name: firstFont, size: size) {
+                    return font
+                }
+            }
+
+            return nil
+        }
+    }
+}
