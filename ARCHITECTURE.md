@@ -33,3 +33,11 @@ Tasbee7/
 - Haptics: pushes get a medium impact automatically (`athkarDestinations`), picks use `.selection`, finishing uses `.success`.
 - To add a chapter, add its exact JSON title to a group in `AthkarCatalog`. Unknown titles still show, under "أخرى".
 - Storage keys from version 1.x are kept, so favourites, settings and the tasbih count carry over.
+
+## Tests
+
+`Tasbee7Tests/` is a unit-test target hosted in the app (`@testable import Tasbee7`), one folder per kind of test.
+
+- `Performance/`: XCTest `measure` blocks (set baselines per device in Xcode) plus hard budgets in `PerformanceBudget.swift`
+  that fail on any machine. Covers loading the book, search (worst case and search-as-you-type), highlighting,
+  sunrise/sunset for reminders, and tasbih taps. Run with ⌘U, or `xcodebuild test -scheme Tasbee7 -destination 'platform=iOS Simulator,name=iPhone 17'`.
