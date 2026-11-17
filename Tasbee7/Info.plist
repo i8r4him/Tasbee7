@@ -2,8 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>ar</string>
+	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to accurately calculate sunrise and sunset times to send morning and evening athkar reminders</string>
+	<string>نستخدم موقعاً تقريبياً لحساب وقت الشروق والغروب عندك، لنذكّرك بأذكار الصباح والمساء في وقتها. يُحسب الوقت على جهازك ولا يغادره.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>نحتاج إلى إذن الإشعارات لإرسال تذكيرات أذكار الصباح والمساء في الأوقات المناسبة</string>
 	<key>UIAppFonts</key>
