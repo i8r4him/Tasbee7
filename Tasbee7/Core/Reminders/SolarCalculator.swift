@@ -23,6 +23,12 @@ enum SolarCalculator {
         on date: Date,
         timeZone: TimeZone = .current
     ) -> SunTimes? {
+        // A NaN or out-of-range place (e.g. from a corrupted preferences file) would otherwise
+        // produce NaN dates, and scheduling a reminder at a NaN date crashes.
+        guard latitude.isFinite, longitude.isFinite,
+              (-90...90).contains(latitude), (-180...180).contains(longitude) else {
+            return nil
+        }
         var local = Calendar(identifier: .gregorian)
         local.timeZone = timeZone
         let day = local.dateComponents([.year, .month, .day], from: date)

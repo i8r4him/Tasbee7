@@ -13,6 +13,30 @@ import Observation
 struct Coordinate: Equatable {
     let latitude: Double
     let longitude: Double
+
+    /// A real place on Earth: finite and within ±90° latitude and ±180° longitude.
+    var isValid: Bool {
+        latitude.isFinite && longitude.isFinite
+            && (-90...90).contains(latitude) && (-180...180).contains(longitude)
+    }
+
+    /// Two decimals ≈ 1 km: plenty for sun times, and no more precise than needed.
+    /// This is the only precision that is ever stored.
+    func roundedForStorage() -> Coordinate {
+        Coordinate(
+            latitude: (latitude * 100).rounded() / 100,
+            longitude: (longitude * 100).rounded() / 100
+        )
+    }
+
+    /// The stored place, or nil when nothing is stored or the stored values aren't a real place
+    /// (e.g. a tampered or corrupted preferences file).
+    static func stored(in defaults: UserDefaults, latitudeKey: String, longitudeKey: String) -> Coordinate? {
+        guard let latitude = defaults.object(forKey: latitudeKey) as? Double,
+              let longitude = defaults.object(forKey: longitudeKey) as? Double else { return nil }
+        let coordinate = Coordinate(latitude: latitude, longitude: longitude)
+        return coordinate.isValid ? coordinate.roundedForStorage() : nil
+    }
 }
 
 @Observable
@@ -36,13 +60,7 @@ final class LocationService: NSObject {
 
     private override init() {
         authorizationStatus = manager.authorizationStatus
-        let defaults = UserDefaults.standard
-        if defaults.object(forKey: Self.latitudeKey) != nil {
-            coordinate = Coordinate(
-                latitude: defaults.double(forKey: Self.latitudeKey),
-                longitude: defaults.double(forKey: Self.longitudeKey)
-            )
-        }
+        coordinate = Coordinate.stored(in: .standard, latitudeKey: Self.latitudeKey, longitudeKey: Self.longitudeKey)
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyKilometer
@@ -61,11 +79,9 @@ final class LocationService: NSObject {
     }
 
     private func store(_ location: CLLocation) {
-        // Two decimals ≈ 1 km: plenty for sun times, and no more precise than needed.
-        let rounded = Coordinate(
-            latitude: (location.coordinate.latitude * 100).rounded() / 100,
-            longitude: (location.coordinate.longitude * 100).rounded() / 100
-        )
+        let raw = Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        guard raw.isValid else { return }
+        let rounded = raw.roundedForStorage()
         guard rounded != coordinate else { return }
         coordinate = rounded
         UserDefaults.standard.set(rounded.latitude, forKey: Self.latitudeKey)

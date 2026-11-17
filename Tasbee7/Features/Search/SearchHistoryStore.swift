@@ -11,19 +11,24 @@ import Observation
 final class SearchHistoryStore {
     static let shared = SearchHistoryStore()
 
-    private static let key = "recentSearches"
-    private static let limit = 10
+    static let key = "recentSearches"
+    static let limit = 10
+    /// Longer text isn't a search anyone typed; it isn't kept.
+    static let maxQueryLength = 100
 
+    private let defaults: UserDefaults
     private(set) var queries: [String]
 
-    private init() {
-        queries = UserDefaults.standard.data(forKey: Self.key)
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        let stored = defaults.data(forKey: Self.key)
             .flatMap { try? JSONDecoder().decode([String].self, from: $0) } ?? []
+        queries = Array(stored.filter { !$0.isEmpty && $0.count <= Self.maxQueryLength }.prefix(Self.limit))
     }
 
     func add(_ query: String) {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
+        guard !trimmed.isEmpty, trimmed.count <= Self.maxQueryLength else { return }
         queries.removeAll { ArabicText.normalize($0) == ArabicText.normalize(trimmed) }
         queries.insert(trimmed, at: 0)
         queries = Array(queries.prefix(Self.limit))
@@ -35,14 +40,15 @@ final class SearchHistoryStore {
         save()
     }
 
+    /// Forgets every search, including the stored copy.
     func clear() {
         queries = []
-        save()
+        defaults.removeObject(forKey: Self.key)
     }
 
     private func save() {
         if let data = try? JSONEncoder().encode(queries) {
-            UserDefaults.standard.set(data, forKey: Self.key)
+            defaults.set(data, forKey: Self.key)
         }
     }
 }
