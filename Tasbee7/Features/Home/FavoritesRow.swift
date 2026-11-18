@@ -41,7 +41,7 @@ private struct FavoriteTile: View {
     let side: CGFloat
 
     private var systemImage: String {
-        section.groupName.flatMap(AthkarCatalog.group(named:))?.systemImage ?? "star.fill"
+        section.groupName.flatMap { AthkarCatalog.group(named: $0) }?.systemImage ?? "star.fill"
     }
 
     var body: some View {
