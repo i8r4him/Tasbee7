@@ -2,13 +2,14 @@
 //  TodayView.swift
 //  Tasbee7
 //
-//  The home of the app: the date, the next prayer, the athkar that fit now, today's wird,
-//  the ayah of the day and what makes today special.
+//  The home of the app: a greeting with the date and the athkar that fit now, prayer times,
+//  daily shortcuts, today's wird, the occasion of the day, and an ayah and a dua of the day.
 //
 
 import SwiftUI
 
 struct TodayView: View {
+    @Environment(AthkarRepository.self) private var repository
     @Bindable private var router = AppRouter.shared
 
     @State private var showsSettings = false
@@ -23,7 +24,6 @@ struct TodayView: View {
         NavigationStack(path: $router.todayPath) {
             TimelineView(.everyMinute) { context in
                 content(now: context.date)
-                    .navigationSubtitle(Self.dateLine(for: context.date))
             }
             .navigationTitle("اليوم")
             .toolbarTitleDisplayMode(.inlineLarge)
@@ -48,23 +48,44 @@ struct TodayView: View {
 
     private func content(now: Date) -> some View {
         let times = prayerTimes(on: now)
+        let tomorrowTimes = prayerTimes(on: tomorrow(after: now))
+        let next = times?.nextPrayer(after: now) ?? tomorrowTimes.map { PrayerTime(prayer: .fajr, time: $0.fajr) }
         let sitting = DailySchedule.current(at: now) { prayerTimes(on: $0) }
         let occasions = Occasions.on(now)
+        let dua = DuaOfTheDay.pick(from: DuaOfTheDay.pool(from: repository.section(titled:)), on: now)
 
         return ScrollView {
             VStack(alignment: .leading, spacing: Spacing.section) {
-                NextPrayerCard(now: now, today: times, tomorrow: { prayerTimes(on: tomorrow(after: now)) })
+                TodayHeader(now: now, sitting: sitting, nextPrayer: next)
 
-                NowCard(sitting: sitting, now: now)
+                PrayerTimesSection(now: now, today: times, tomorrow: tomorrowTimes)
+
+                DailyShortcuts()
 
                 DailyWirdCard(day: sitting.day)
 
-                if let ayah = AyahOfTheDay.pick(from: ayat, on: now) {
-                    AyahCard(ayah: ayah)
-                }
-
                 if !occasions.isEmpty {
                     OccasionsCard(occasions: occasions)
+                }
+
+                if let ayah = AyahOfTheDay.pick(from: ayat, on: now) {
+                    DayTextCard(
+                        tag: "آية اليوم",
+                        tagSymbol: "book.closed.fill",
+                        text: "﴿\(ayah.text)﴾",
+                        reference: ayah.reference,
+                        shareText: ayah.shareText
+                    )
+                }
+
+                if let dua {
+                    DayTextCard(
+                        tag: "دعاء اليوم",
+                        tagSymbol: "hands.and.sparkles.fill",
+                        text: dua.text,
+                        reference: "\(dua.chapterTitle) · حصن المسلم",
+                        shareText: dua.shareText
+                    )
                 }
             }
             .padding(Spacing.screen)

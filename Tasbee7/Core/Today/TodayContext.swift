@@ -16,6 +16,6 @@ enum TodayContext {
 
     /// The sitting that fits right now (or at `date`).
     static func currentSitting(at date: Date = .now) -> DailyKey {
-        DailySchedule.current(at: date, prayers: prayerTimes(on:))
+        DailySchedule.current(at: date) { prayerTimes(on: $0) }
     }
 }
