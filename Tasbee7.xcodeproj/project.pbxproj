@@ -6,7 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		8E7A10072F1A000100C0FFEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83569A512EBCDEF00040B817 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83569A582EBCDEF00040B817;
+			remoteInfo = Tasbee7;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		8E7A10022F1A000100C0FFEE /* Tasbee7Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tasbee7Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83569A592EBCDEF00040B817 /* Tasbee7.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tasbee7.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -29,10 +40,22 @@
 			path = Tasbee7;
 			sourceTree = "<group>";
 		};
+		8E7A10032F1A000100C0FFEE /* Tasbee7Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Tasbee7Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		83569A562EBCDEF00040B817 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E7A10052F1A000100C0FFEE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				83569A5B2EBCDEF00040B817 /* Tasbee7 */,
+				8E7A10032F1A000100C0FFEE /* Tasbee7Tests */,
 				83569A5A2EBCDEF00040B817 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				83569A592EBCDEF00040B817 /* Tasbee7.app */,
+				8E7A10022F1A000100C0FFEE /* Tasbee7Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +108,29 @@
 			productReference = 83569A592EBCDEF00040B817 /* Tasbee7.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8E7A10012F1A000100C0FFEE /* Tasbee7Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8E7A100B2F1A000100C0FFEE /* Build configuration list for PBXNativeTarget "Tasbee7Tests" */;
+			buildPhases = (
+				8E7A10042F1A000100C0FFEE /* Sources */,
+				8E7A10052F1A000100C0FFEE /* Frameworks */,
+				8E7A10062F1A000100C0FFEE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8E7A10082F1A000100C0FFEE /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8E7A10032F1A000100C0FFEE /* Tasbee7Tests */,
+			);
+			name = Tasbee7Tests;
+			packageProductDependencies = (
+			);
+			productName = Tasbee7Tests;
+			productReference = 8E7A10022F1A000100C0FFEE /* Tasbee7Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -95,6 +143,10 @@
 				TargetAttributes = {
 					83569A582EBCDEF00040B817 = {
 						CreatedOnToolsVersion = 26.0.1;
+					};
+					8E7A10012F1A000100C0FFEE = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 83569A582EBCDEF00040B817;
 					};
 				};
 			};
@@ -114,12 +166,20 @@
 			projectRoot = "";
 			targets = (
 				83569A582EBCDEF00040B817 /* Tasbee7 */,
+				8E7A10012F1A000100C0FFEE /* Tasbee7Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		83569A572EBCDEF00040B817 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E7A10062F1A000100C0FFEE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -136,7 +196,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8E7A10042F1A000100C0FFEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8E7A10082F1A000100C0FFEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83569A582EBCDEF00040B817 /* Tasbee7 */;
+			targetProxy = 8E7A10072F1A000100C0FFEE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		83569A622EBCDEF10040B817 /* Debug */ = {
@@ -359,6 +434,56 @@
 			};
 			name = Release;
 		};
+		8E7A10092F1A000100C0FFEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DMKPB2487F;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = i8r4him.Tasbee7Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tasbee7.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tasbee7";
+			};
+			name = Debug;
+		};
+		8E7A100A2F1A000100C0FFEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DMKPB2487F;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = i8r4him.Tasbee7Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tasbee7.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tasbee7";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -376,6 +501,15 @@
 			buildConfigurations = (
 				83569A652EBCDEF10040B817 /* Debug */,
 				83569A662EBCDEF10040B817 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8E7A100B2F1A000100C0FFEE /* Build configuration list for PBXNativeTarget "Tasbee7Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8E7A10092F1A000100C0FFEE /* Debug */,
+				8E7A100A2F1A000100C0FFEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
