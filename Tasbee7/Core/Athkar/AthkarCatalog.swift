@@ -21,6 +21,9 @@ enum AthkarCatalog {
     static let morningEveningTitle = "أذكار الصباح والمساء"
     /// The chapter the Today screen offers at night.
     static let sleepTitle = "أذكار النوم"
+    /// Shortcuts on the Today screen.
+    static let afterPrayerTitle = "الأذكار بعد السلام من الصلاة"
+    static let wakingTitle = "أذكار الاستيقاظ من النوم"
 
     static let groups: [CatalogGroup] = [
         CatalogGroup(
