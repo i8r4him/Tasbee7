@@ -9,7 +9,7 @@ import AudioToolbox
 import SwiftUI
 
 struct SebhaView: View {
-    @State private var store = SebhaStore()
+    @Bindable private var store = SebhaStore.shared
     @State private var showsPhrases = false
     @State private var confirmsReset = false
     @State private var resets = 0

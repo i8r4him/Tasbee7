@@ -10,6 +10,9 @@ import Observation
 
 @Observable
 final class SebhaStore {
+    /// The one counter the Sebha tab and the Today screen share.
+    static let shared = SebhaStore()
+
     static let basePhrases = [
         "سبحان الله",
         "الحمد لله",
@@ -22,6 +25,8 @@ final class SebhaStore {
     static let targetRange = 1...100_000
     static let maxPhraseLength = 120
     static let maxCustomPhrases = 100
+    /// The daily tasbih goal on the Today screen: "سبحان الله وبحمده" a hundred times a day.
+    static let dailyGoal = 100
 
     private enum Key {
         static let counts = "sebha.counts"
@@ -30,12 +35,15 @@ final class SebhaStore {
         static let target = "sebhaTarget"
         static let haptics = "sebhaHapticEnabled"
         static let sound = "sebhaSoundEnabled"
+        static let dailyCount = "sebha.daily.count"
+        static let dailyDay = "sebha.daily.day"
         // Version 1.x kept one shared counter.
         static let legacyCounter = "sebhaCounter"
         static let legacyPhraseIndex = "sebhaPhraseIndex"
     }
 
     private let defaults: UserDefaults
+    private let calendar: Calendar
 
     private(set) var customPhrases: [String]
     private(set) var counts: [String: Int]
@@ -58,8 +66,15 @@ final class SebhaStore {
         didSet { defaults.set(soundEnabled, forKey: Key.sound) }
     }
 
-    init(defaults: UserDefaults = .standard) {
+    /// Taps today, across all phrases. Kept with the day it counts, so it starts again at midnight.
+    private(set) var dailyCount: Int
+    private(set) var dailyDay: String
+
+    init(defaults: UserDefaults = .standard, calendar: Calendar = .current) {
         self.defaults = defaults
+        self.calendar = calendar
+        dailyCount = max(0, defaults.integer(forKey: Key.dailyCount))
+        dailyDay = defaults.string(forKey: Key.dailyDay) ?? ""
 
         let stored = defaults.string(forKey: Key.customPhrases)
             .flatMap { $0.data(using: .utf8) }
@@ -126,12 +141,24 @@ final class SebhaStore {
 
     // MARK: - Changing
 
+    /// Taps on the day of `date` (0 when the last tap was on another day).
+    func todayCount(on date: Date = .now) -> Int {
+        dailyDay == DailyKey.dayString(for: date, calendar: calendar) ? dailyCount : 0
+    }
+
     /// Adds one. Stops at `Int.max` instead of overflowing, which would crash the app.
-    func increment() {
+    func increment(now: Date = .now) {
         let (next, overflow) = count.addingReportingOverflow(1)
         guard !overflow else { return }
         counts[selectedPhrase] = next
         saveCounts()
+
+        let today = DailyKey.dayString(for: now, calendar: calendar)
+        let todaySoFar = dailyDay == today ? dailyCount : 0
+        dailyDay = today
+        dailyCount = todaySoFar < Int.max ? todaySoFar + 1 : todaySoFar
+        defaults.set(dailyCount, forKey: Key.dailyCount)
+        defaults.set(dailyDay, forKey: Key.dailyDay)
     }
 
     func reset() {

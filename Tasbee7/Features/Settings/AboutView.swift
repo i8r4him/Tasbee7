@@ -7,6 +7,7 @@ import SwiftUI
 
 struct AboutView: View {
     private let features: [(String, String, String)] = [
+        ("sun.horizon.fill", "اليوم", "أوقات الصلاة على جهازك، وأذكار الوقت، وورد اليوم، وآية كل يوم."),
         ("book.fill", "حصن المسلم كاملاً", "١٣٤ باباً في ٣٦ قسماً، بخط شهرزاد أو خط النظام."),
         ("circle.dotted", "سبحة رقمية", "عدّ لكل ذكر، وهدف تختاره، واهتزاز خفيف مع كل تسبيحة."),
         ("magnifyingglass", "بحث ذكي", "يجد الذكر ولو كتبته بلا تشكيل أو همزات."),
@@ -37,6 +38,10 @@ struct AboutView: View {
                     }
                 }
                 .glassEffect(.regular, in: .card)
+
+                Text("نص آية اليوم من مشروع تنزيل (tanzil.net) دون أي تعديل، برخصة CC BY 3.0.")
+                    .textRole(.caption)
+                    .foregroundStyle(.secondary)
 
                 DeveloperLinks()
             }

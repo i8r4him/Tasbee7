@@ -19,6 +19,8 @@ struct CatalogGroup: Identifiable, Hashable {
 enum AthkarCatalog {
     /// The chapter that the morning and evening reminders open.
     static let morningEveningTitle = "أذكار الصباح والمساء"
+    /// The chapter the Today screen offers at night.
+    static let sleepTitle = "أذكار النوم"
 
     static let groups: [CatalogGroup] = [
         CatalogGroup(

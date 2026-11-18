@@ -16,7 +16,11 @@ extension View {
                 case .group(let name):
                     CategoryView(groupName: name)
                 case .section(let title):
-                    ReaderView(title: title)
+                    // Opening today's chapter from anywhere (a reminder, the book, search) still counts for today.
+                    let sitting = TodayContext.currentSitting()
+                    ReaderView(title: title, sitting: sitting.kind.chapterTitle == title ? sitting : nil)
+                case .daily(let key):
+                    ReaderView(title: key.kind.chapterTitle, sitting: key)
                 }
             }
             .sensoryFeedback(.impact(weight: .medium), trigger: path.count) { old, new in new > old }

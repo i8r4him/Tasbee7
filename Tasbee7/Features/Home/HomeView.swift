@@ -2,7 +2,7 @@
 //  HomeView.swift
 //  Tasbee7
 //
-//  Today's athkar first, then favourites, then every group of the book.
+//  The book: favourites first, then every group. Today's athkar live on the Today tab.
 //
 
 import SwiftUI
@@ -58,8 +58,6 @@ struct HomeView: View {
         case .loading, .loaded:
             ScrollView {
                 VStack(alignment: .leading, spacing: Spacing.section) {
-                    DailyAthkarCard()
-
                     let favoriteSections = favorites.sections(in: repository)
                     if !favoriteSections.isEmpty {
                         FavoritesRow(sections: favoriteSections)
