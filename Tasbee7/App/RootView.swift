@@ -2,7 +2,7 @@
 //  RootView.swift
 //  Tasbee7
 //
-//  The tab bar, the theme tint, rounded type and the app-wide motion setting.
+//  The tab bar (Today first), the theme tint, rounded type and the app-wide motion setting.
 //
 
 import SwiftUI
@@ -35,6 +35,10 @@ struct RootView: View {
 
     private var tabs: some View {
         TabView(selection: $router.selectedTab) {
+            Tab("اليوم", systemImage: "sun.horizon", value: AppTab.today) {
+                TodayView()
+            }
+
             Tab("الأذكار", systemImage: "book", value: AppTab.home) {
                 HomeView()
             }
@@ -68,7 +72,9 @@ struct RootView: View {
     private func appBecameActive(_ phase: ScenePhase) {
         guard phase == .active else { return }
         UNUserNotificationCenter.current().setBadgeCount(0)
-        if reminders.anyEnabled {
+        // A fresh place for prayer times and reminders, but only once the user has allowed it
+        // (or turned a reminder on, which asks).
+        if reminders.anyEnabled || location.isAuthorized {
             location.refresh()
         }
         Task { await reminders.reschedule() }

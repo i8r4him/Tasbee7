@@ -9,20 +9,23 @@ import Observation
 import SwiftUI
 
 enum AppTab: Hashable {
-    case home, sebha, search
+    case today, home, sebha, search
 }
 
 /// Places inside the athkar book that any tab can push.
 enum AthkarRoute: Hashable {
     case group(String)
     case section(String)
+    /// A daily sitting (morning, evening or sleep athkar of one day), with ticks and "continue where you left off".
+    case daily(DailyKey)
 }
 
 @Observable
 final class AppRouter {
     static let shared = AppRouter()
 
-    var selectedTab: AppTab = .home
+    var selectedTab: AppTab = .today
+    var todayPath: [AthkarRoute] = []
     var homePath: [AthkarRoute] = []
     var searchPath: [AthkarRoute] = []
 

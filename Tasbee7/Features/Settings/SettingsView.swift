@@ -11,6 +11,7 @@ struct SettingsView: View {
 
     private let theme = Theme.shared
     private let reminders = ReminderScheduler.shared
+    @Bindable private var prayer = PrayerSettings.shared
 
     static let appStoreURL = URL(string: "https://apps.apple.com/app/tasbee7/id6755359818")!
     static let developerXURL = URL(string: "https://x.com/i8r4him")!
@@ -39,6 +40,23 @@ struct SettingsView: View {
                     } label: {
                         SettingsRow(systemImage: "textformat.size", title: "حجم الخط")
                     }
+                }
+
+                Section {
+                    Picker(selection: $prayer.method) {
+                        ForEach(CalculationMethod.allCases) { Text($0.name).tag($0) }
+                    } label: {
+                        SettingsRow(systemImage: "moon.stars.fill", title: "طريقة الحساب")
+                    }
+                    Picker(selection: $prayer.asr) {
+                        ForEach(AsrMethod.allCases) { Text($0.name).tag($0) }
+                    } label: {
+                        SettingsRow(systemImage: "sun.min.fill", title: "وقت العصر")
+                    }
+                } header: {
+                    Text("أوقات الصلاة")
+                } footer: {
+                    Text("تُحسب الأوقات على جهازك من موقعك التقريبي. اختر الطريقة المعتمدة في بلدك.")
                 }
 
                 Section("التذكيرات") {
