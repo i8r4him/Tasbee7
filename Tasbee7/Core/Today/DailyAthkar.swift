@@ -97,7 +97,7 @@ enum DailySchedule {
     static func current(
         at date: Date,
         calendar: Calendar = .current,
-        prayers: (Date) -> PrayerTimes?
+        prayers: @MainActor (Date) -> PrayerTimes?
     ) -> DailyKey {
         let today = boundaries(on: date, calendar: calendar, prayers: prayers)
         let todayString = DailyKey.dayString(for: date, calendar: calendar)
@@ -121,7 +121,7 @@ enum DailySchedule {
     private static func boundaries(
         on date: Date,
         calendar: Calendar,
-        prayers: (Date) -> PrayerTimes?
+        prayers: @MainActor (Date) -> PrayerTimes?
     ) -> (fajr: Date, asr: Date, isha: Date) {
         if let times = prayers(date) {
             return (times.fajr, times.asr, times.isha)
