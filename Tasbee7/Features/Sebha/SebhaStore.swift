@@ -18,6 +18,10 @@ final class SebhaStore {
         "أستغفر الله"
     ]
     static let presetTargets = [33, 99, 100]
+    /// Bounds for anything read back from storage or typed by the user.
+    static let targetRange = 1...100_000
+    static let maxPhraseLength = 120
+    static let maxCustomPhrases = 100
 
     private enum Key {
         static let counts = "sebha.counts"
@@ -37,8 +41,13 @@ final class SebhaStore {
     private(set) var counts: [String: Int]
     private(set) var selectedPhrase: String
 
+    /// Always within `targetRange`, so the round maths can never divide by zero.
     var target: Int {
-        didSet { defaults.set(target, forKey: Key.target) }
+        didSet {
+            let clamped = Self.clampTarget(target)
+            if clamped != target { target = clamped }
+            defaults.set(target, forKey: Key.target)
+        }
     }
 
     var hapticsEnabled: Bool {
@@ -52,31 +61,43 @@ final class SebhaStore {
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
 
-        let custom = defaults.string(forKey: Key.customPhrases)
+        let stored = defaults.string(forKey: Key.customPhrases)
             .flatMap { $0.data(using: .utf8) }
             .flatMap { try? JSONDecoder().decode([String].self, from: $0) } ?? []
+        // Stored phrases go through the same cleaning as typed ones; duplicates and junk are dropped.
+        var custom: [String] = []
+        for raw in stored {
+            guard let phrase = Self.sanitizedPhrase(raw),
+                  !Self.basePhrases.contains(phrase), !custom.contains(phrase) else { continue }
+            custom.append(phrase)
+            if custom.count == Self.maxCustomPhrases { break }
+        }
         customPhrases = custom
 
         let all = Self.basePhrases + custom
         let storedTarget = defaults.integer(forKey: Key.target)
-        target = storedTarget > 0 ? storedTarget : 33
+        target = Self.targetRange.contains(storedTarget) ? storedTarget : 33
         hapticsEnabled = defaults.object(forKey: Key.haptics) as? Bool ?? true
         soundEnabled = defaults.object(forKey: Key.sound) as? Bool ?? true
 
-        if let selected = defaults.string(forKey: Key.selected), all.contains(selected) {
-            selectedPhrase = selected
+        // A local first: reading `self` before every stored property is set doesn't compile.
+        let selected: String
+        if let stored = defaults.string(forKey: Key.selected), all.contains(stored) {
+            selected = stored
         } else {
             let index = defaults.integer(forKey: Key.legacyPhraseIndex)
-            selectedPhrase = all.indices.contains(index) ? all[index] : all[0]
+            selected = all.indices.contains(index) ? all[index] : all[0]
         }
+        selectedPhrase = selected
 
         if let data = defaults.data(forKey: Key.counts),
-           let stored = try? JSONDecoder().decode([String: Int].self, from: data) {
-            counts = stored
+           let storedCounts = try? JSONDecoder().decode([String: Int].self, from: data) {
+            // Negative counts can only come from a tampered file; drop them.
+            counts = storedCounts.filter { $0.value > 0 }
         } else {
             // Carry the old shared counter over to the phrase that was selected.
-            let legacy = defaults.integer(forKey: Key.legacyCounter)
-            counts = legacy > 0 ? [selectedPhrase: legacy] : [:]
+            let legacy = max(0, defaults.integer(forKey: Key.legacyCounter))
+            counts = legacy > 0 ? [selected: legacy] : [:]
         }
     }
 
@@ -105,8 +126,11 @@ final class SebhaStore {
 
     // MARK: - Changing
 
+    /// Adds one. Stops at `Int.max` instead of overflowing, which would crash the app.
     func increment() {
-        counts[selectedPhrase, default: 0] += 1
+        let (next, overflow) = count.addingReportingOverflow(1)
+        guard !overflow else { return }
+        counts[selectedPhrase] = next
         saveCounts()
     }
 
@@ -121,11 +145,13 @@ final class SebhaStore {
         defaults.set(phrase, forKey: Key.selected)
     }
 
-    /// Adds a phrase and selects it. Returns false when it's empty or already there.
+    /// Adds a phrase and selects it. Returns false when it's empty, too long, already there,
+    /// or the list is full.
     @discardableResult
     func addPhrase(_ text: String) -> Bool {
-        let phrase = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !phrase.isEmpty, !allPhrases.contains(phrase) else { return false }
+        guard let phrase = Self.sanitizedPhrase(text),
+              !allPhrases.contains(phrase),
+              customPhrases.count < Self.maxCustomPhrases else { return false }
         customPhrases.append(phrase)
         saveCustomPhrases()
         select(phrase)
@@ -141,6 +167,36 @@ final class SebhaStore {
         if removed.contains(selectedPhrase) {
             select(Self.basePhrases[0])
         }
+    }
+
+    // MARK: - Validation
+
+    static func clampTarget(_ value: Int) -> Int {
+        min(max(value, targetRange.lowerBound), targetRange.upperBound)
+    }
+
+    /// The phrase as it should be stored, or nil when nothing usable is left.
+    /// Removes control characters and invisible bidi overrides (which can make text display
+    /// differently from what it contains), collapses whitespace, and rejects overly long text.
+    static func sanitizedPhrase(_ text: String) -> String? {
+        var scalars = String.UnicodeScalarView()
+        for scalar in text.unicodeScalars {
+            switch scalar.value {
+            case 0x202A...0x202E, 0x2066...0x2069, 0x200E, 0x200F, 0x061C, 0xFEFF:
+                continue
+            default:
+                if scalar.properties.generalCategory == .control {
+                    scalars.append(" ")
+                } else {
+                    scalars.append(scalar)
+                }
+            }
+        }
+        let phrase = String(scalars)
+            .split(whereSeparator: \.isWhitespace)
+            .joined(separator: " ")
+        guard !phrase.isEmpty, phrase.count <= maxPhraseLength else { return nil }
+        return phrase
     }
 
     private func saveCounts() {

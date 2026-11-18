@@ -15,6 +15,10 @@ enum ArabicText {
         // Tashkeel (fathatan … sukun), superscript alef, Quranic marks, tatweel.
         case 0x064B...0x065F, 0x0670, 0x06D6...0x06ED, 0x0640:
             return nil
+        // Invisible format characters (zero-width, bidi marks/overrides/isolates, BOM), so pasted
+        // text with hidden characters still matches and can't hide a word from search.
+        case 0x200B...0x200F, 0x202A...0x202E, 0x2066...0x2069, 0x061C, 0xFEFF:
+            return nil
         // أ إ آ ٱ → ا
         case 0x0622, 0x0623, 0x0625, 0x0671:
             return "\u{0627}"

@@ -41,3 +41,6 @@ Tasbee7/
 - `Performance/`: XCTest `measure` blocks (set baselines per device in Xcode) plus hard budgets in `PerformanceBudget.swift`
   that fail on any machine. Covers loading the book, search (worst case and search-as-you-type), highlighting,
   sunrise/sunset for reminders, and tasbih taps. Run with ⌘U, or `xcodebuild test -scheme Tasbee7 -destination 'platform=iOS Simulator,name=iPhone 17'`.
+- `Security/`: Swift Testing suites that guard against tampered or corrupted preferences, hostile notification
+  payloads and search input, hidden characters in the book, over-precise stored location, and any widening of
+  ATS, permissions, URL schemes or the privacy manifest. Each test uses its own throwaway `UserDefaults` suite.

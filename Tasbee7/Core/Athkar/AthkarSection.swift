@@ -44,7 +44,11 @@ enum AthkarLoader {
         guard let url = bundle.url(forResource: "hisn_almuslim", withExtension: "json") else {
             throw AthkarLoaderError.fileNotFound
         }
-        let data = try Data(contentsOf: url)
+        return try sections(from: Data(contentsOf: url))
+    }
+
+    /// Decodes the book. Malformed data throws instead of crashing.
+    static func sections(from data: Data) throws -> [AthkarSection] {
         let decoded = try JSONDecoder().decode([String: SectionContent].self, from: data)
 
         return decoded
