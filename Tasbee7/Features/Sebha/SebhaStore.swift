@@ -160,7 +160,7 @@ final class SebhaStore {
 
     func deleteCustomPhrases(at offsets: IndexSet) {
         let removed = offsets.map { customPhrases[$0] }
-        customPhrases.remove(atOffsets: offsets)
+        for index in offsets.reversed() { customPhrases.remove(at: index) }
         for phrase in removed { counts[phrase] = nil }
         saveCustomPhrases()
         saveCounts()
