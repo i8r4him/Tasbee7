@@ -19,6 +19,21 @@ struct RootView: View {
     private let location = LocationService.shared
 
     var body: some View {
+        styled(tabs)
+            .fullScreenCover(isPresented: showsOnboarding) {
+                styled(onboarding)
+            }
+            .onChange(of: scenePhase, initial: true) { _, phase in
+                appBecameActive(phase)
+            }
+            .onChange(of: location.coordinate) {
+                Task { await reminders.reschedule() }
+            }
+    }
+
+    // Split into small pieces so the type checker never has to solve one long chain.
+
+    private var tabs: some View {
         TabView(selection: $router.selectedTab) {
             Tab("الأذكار", systemImage: "book", value: AppTab.home) {
                 HomeView()
@@ -33,28 +48,30 @@ struct RootView: View {
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
-        .tint(Color.accent)
-        .fontDesign(.rounded)
-        .environment(\.reducesMotion, systemReduceMotion)
-        .fullScreenCover(isPresented: showsOnboarding) {
-            OnboardingView {
-                hasCompletedOnboarding = true
-            }
-            .tint(Color.accent)
+    }
+
+    private var onboarding: some View {
+        OnboardingView {
+            hasCompletedOnboarding = true
+        }
+    }
+
+    /// The theme tint, rounded type and the app-wide motion setting.
+    private func styled(_ content: some View) -> some View {
+        let tint: Color = Theme.shared.palette.accent
+        return content
+            .tint(tint)
             .fontDesign(.rounded)
             .environment(\.reducesMotion, systemReduceMotion)
+    }
+
+    private func appBecameActive(_ phase: ScenePhase) {
+        guard phase == .active else { return }
+        UNUserNotificationCenter.current().setBadgeCount(0)
+        if reminders.anyEnabled {
+            location.refresh()
         }
-        .onChange(of: scenePhase, initial: true) { _, phase in
-            guard phase == .active else { return }
-            UNUserNotificationCenter.current().setBadgeCount(0)
-            if reminders.anyEnabled {
-                location.refresh()
-            }
-            Task { await reminders.reschedule() }
-        }
-        .onChange(of: location.coordinate) {
-            Task { await reminders.reschedule() }
-        }
+        Task { await reminders.reschedule() }
     }
 
     private var showsOnboarding: Binding<Bool> {
